@@ -147,7 +147,7 @@ const AIFinancialLiteracyApp = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100 text-slate-800 overflow-hidden font-sans relative">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white/95 backdrop-blur-lg z-50 px-6 py-3 border-b border-slate-200">
+      <header className="fixed top-0 w-full bg-white backdrop-blur-lg z-50 px-6 py-3 border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img src="logos/gdatalogo_regular.webp" alt="G-Data Labs" className="h-10 w-auto" />
@@ -180,7 +180,7 @@ const AIFinancialLiteracyApp = () => {
       {/* Main Content */}
       <main className="pt-28 pb-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className={`bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-xl min-h-[600px] border border-slate-200 ${currentSlide === 0 ? 'bg-transparent shadow-none border-none' : ''}`}>
+          <div className={`bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-xl min-h-[600px] border border-slate-200 ${currentSlide === 0 ? 'bg-transparent shadow-none border-none' : ''}`}>
              {currentSlide > 0 && (
                 <h2 className="text-4xl font-bold mb-8 text-center text-slate-800">
                 {slides[currentSlide].title}
@@ -194,7 +194,7 @@ const AIFinancialLiteracyApp = () => {
       </main>
 
       {/* Navigation */}
-      <nav className="fixed bottom-0 w-full bg-white/95 backdrop-blur-lg px-6 py-3 border-t border-slate-200">
+      <nav className="fixed bottom-0 w-full bg-white backdrop-blur-lg px-6 py-3 border-t border-slate-200 shadow-lg">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <button
             onClick={prevSlide}
@@ -616,7 +616,7 @@ const DataDollarsModule = ({ setUserDataValue, userDataValue }) => {
                   max="8"
                   value={hours}
                   onChange={(e) => setAppUsage({...appUsage, [app]: parseInt(e.target.value)})}
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider"
+                  className="w-full h-3 bg-slate-300 rounded-lg appearance-none cursor-pointer slider border border-slate-400"
                 />
               </div>
             ))}
@@ -1226,17 +1226,17 @@ const Quote = ({ text, author }) => (
 );
 
 const StatCard = ({ icon, title, value, description, tooltipText }) => (
-  <div className="bg-white p-4 rounded-xl flex items-start gap-4 hover:bg-slate-50 transition-all relative group border border-slate-200 shadow-sm">
+  <div className="bg-white p-4 rounded-xl flex items-start gap-4 hover:bg-slate-50 transition-all relative group border border-slate-300 shadow-md">
     <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-400 rounded-lg text-white">
       {icon}
     </div>
     <div className="flex-1">
-      <h4 className="font-semibold text-slate-800">{title}</h4>
-      <p className="text-2xl font-bold text-blue-600">{value}</p>
-      <p className="text-sm text-slate-600 mt-1">{description}</p>
+      <h4 className="font-bold text-slate-900">{title}</h4>
+      <p className="text-2xl font-bold text-blue-700">{value}</p>
+      <p className="text-sm text-slate-700 mt-1">{description}</p>
     </div>
     {tooltipText && (
-      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 bg-slate-800 text-white text-xs rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 shadow-lg">
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 bg-slate-900 text-white text-xs rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 shadow-xl border border-slate-600">
         {tooltipText}
       </div>
     )}
@@ -1259,22 +1259,46 @@ const SuccessCard = ({ title, description, icon, href }) => (
 // Add custom styles
 const style = document.createElement('style');
 style.textContent = `
+  .slider {
+    background: #cbd5e1;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  .slider::-webkit-slider-track {
+    background: #cbd5e1;
+    height: 12px;
+    border-radius: 6px;
+    border: 1px solid #94a3b8;
+  }
+  
   .slider::-webkit-slider-thumb {
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     background: #3b82f6;
     cursor: pointer;
     border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  
+  .slider::-moz-range-track {
+    background: #cbd5e1;
+    height: 12px;
+    border-radius: 6px;
+    border: 1px solid #94a3b8;
   }
   
   .slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     background: #3b82f6;
     cursor: pointer;
     border-radius: 50%;
-    border: none;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   }
   
   @keyframes pulse {
