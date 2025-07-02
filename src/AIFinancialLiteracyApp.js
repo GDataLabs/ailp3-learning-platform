@@ -147,14 +147,12 @@ const AIFinancialLiteracyApp = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100 text-slate-800 overflow-hidden font-sans relative">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white/80 backdrop-blur-lg z-50 px-6 py-3 border-b border-slate-200">
+      <header className="fixed top-0 w-full bg-white/95 backdrop-blur-lg z-50 px-6 py-3 border-b border-slate-200">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img src="logos/gdatalogo_regular.webp" alt="G-Data Labs" className="h-10 w-auto" />
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-tr from-blue-600 to-blue-400 rounded-lg shadow-md">
-                <Brain className="w-6 h-6 text-white" />
-              </div>
+              <img src="logos/ailp3_logo.png" alt="AILP3" className="h-10 w-auto" />
               <div>
                 <h1 className="text-xl font-bold text-slate-900">
                   AI Financial Literacy
@@ -196,7 +194,7 @@ const AIFinancialLiteracyApp = () => {
       </main>
 
       {/* Navigation */}
-      <nav className="fixed bottom-0 w-full bg-white/80 backdrop-blur-lg px-6 py-3 border-t border-slate-200">
+      <nav className="fixed bottom-0 w-full bg-white/95 backdrop-blur-lg px-6 py-3 border-t border-slate-200">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <button
             onClick={prevSlide}
@@ -949,7 +947,7 @@ const PartnerActivity = ({ time, isRunning, setIsRunning, setPartnerActivityTime
   
   const ideas = [
     { name: "AI Social Media Agency", desc: "Use AI to generate video scripts and content for local businesses.", icon: <Video /> },
-    { name: "AI Music Composer", desc: "Create royalty-free background music for YouTubers and podcasters.", icon: <Music /> },
+    { name: "AI Music Composer", desc: "Use AI to create financial literacy jingles", icon: <Music /> },
     { name: "ScholarshipBot", desc: "AI matches students with personalized scholarships", icon: <Award /> },
     { name: "TeenCredit", desc: "Gamified credit building for high schoolers", icon: <TrendingUp /> },
     { name: "DataDignity", desc: "Platform where teens control and monetize their data", icon: <Shield /> },
