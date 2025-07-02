@@ -149,15 +149,18 @@ const AIFinancialLiteracyApp = () => {
       {/* Header */}
       <header className="fixed top-0 w-full bg-white/80 backdrop-blur-lg z-50 px-6 py-3 border-b border-slate-200">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-tr from-blue-600 to-blue-400 rounded-lg shadow-md">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-900">
-                AI Financial Literacy
-              </h1>
-              <p className="text-xs text-slate-500">Your Data, Your Dollars, Your Dignity</p>
+          <div className="flex items-center gap-4">
+            <img src="logos/gdatalogo_regular.webp" alt="G-Data Labs" className="h-10 w-auto" />
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-tr from-blue-600 to-blue-400 rounded-lg shadow-md">
+                <Brain className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-slate-900">
+                  AI Financial Literacy
+                </h1>
+                <p className="text-xs text-slate-500">Your Data, Your Dollars, Your Dignity</p>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -224,12 +227,12 @@ const AIFinancialLiteracyApp = () => {
 // Title Slide Component
 const TitleSlide = ({ onStart }) => {
     const logos = [
+        { name: 'G-Data Labs', src: 'logos/gdatalogo_regular.webp' },
         { name: 'AILP3', src: 'logos/ailp3_logo.png' },
         { name: 'Georgia State University', src: 'logos/gsu_logo.jpg' },
         { name: 'Atlanta Public Schools', src: 'logos/aps_logo.jpeg' },
         { name: 'Clark Atlanta University', src: 'logos/cau_logo.jpg' },
-        { name: 'Camo', src: 'logos/camo_logo.png' },
-        { name: 'Light', src: 'logos/light_logo.png' },
+        { name: 'City of Atlanta', src: 'logos/camo_logo.png' },
     ];
 
     return (
@@ -869,7 +872,6 @@ const AIToolsDemo = ({ selectedPrompt, setSelectedPrompt, aiResponse, setAiRespo
                 <video 
                   src={tool.video}
                   controls
-                  autoPlay
                   className="w-full h-full object-cover"
                   preload="metadata"
                 >
