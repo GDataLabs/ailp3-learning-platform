@@ -241,12 +241,12 @@ const TitleSlide = ({ onStart }) => {
                 <p className="mt-4 text-2xl text-blue-800/80">Your Data, Your Dollars, Your Dignity</p>
                 <p className="mt-12 text-lg text-slate-600">Presented in partnership with</p>
                 
-                <div className="w-full max-w-4xl mt-6 overflow-hidden relative">
+                <div className="w-full max-w-4xl mt-6 overflow-hidden relative bg-white rounded-2xl p-6 shadow-lg">
                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/0 to-white/0 z-10"></div>
                     <div className="flex animate-scroll">
                         {[...logos, ...logos].map((logo, index) => (
                             <div key={index} className="flex-shrink-0 w-48 mx-8">
-                                <img src={logo.src} alt={logo.name} className="h-12 object-contain mx-auto" />
+                                <img src={logo.src} alt={logo.name} className="h-16 object-contain mx-auto" />
                             </div>
                         ))}
                     </div>
@@ -1236,7 +1236,7 @@ const StatCard = ({ icon, title, value, description, tooltipText }) => (
       <p className="text-sm text-slate-700 mt-1">{description}</p>
     </div>
     {tooltipText && (
-      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 bg-slate-900 text-white text-xs rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 shadow-xl border border-slate-600">
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 bg-slate-800 text-white text-sm rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20 shadow-2xl border-2 border-slate-700">
         {tooltipText}
       </div>
     )}
