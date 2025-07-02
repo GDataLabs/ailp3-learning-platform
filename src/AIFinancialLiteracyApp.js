@@ -596,6 +596,34 @@ const DataDollarsModule = ({ setUserDataValue, userDataValue }) => {
   
   return (
     <div className="space-y-12">
+      <div className="space-y-6">
+        <h3 className="text-2xl font-bold text-center text-slate-800">See How Your Data Creates Value</h3>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
+            <h4 className="text-lg font-bold mb-4 text-slate-700">Understanding Your App Value</h4>
+            <video 
+              src="app_value_videos/app_value_1.mp4"
+              controls
+              className="w-full rounded-lg"
+              preload="metadata"
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
+            <h4 className="text-lg font-bold mb-4 text-slate-700">The Data Economy Explained</h4>
+            <video 
+              src="app_value_videos/app_value_2.mp4"
+              controls
+              className="w-full rounded-lg"
+              preload="metadata"
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+      
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-6">
           <h3 className="text-2xl font-bold flex items-center gap-2 text-slate-800">
@@ -682,33 +710,6 @@ const DataDollarsModule = ({ setUserDataValue, userDataValue }) => {
          <Quote text="You are the new asset class. Your data is your property." author="John Hope Bryant" />
       </div>
 
-      <div className="mt-12 space-y-6">
-        <h3 className="text-2xl font-bold text-center text-slate-800">See How Your Data Creates Value</h3>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
-            <h4 className="text-lg font-bold mb-4 text-slate-700">Understanding Your App Value</h4>
-            <video 
-              src="app_value_videos/app_value_1.mp4"
-              controls
-              className="w-full rounded-lg"
-              preload="metadata"
-            >
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
-            <h4 className="text-lg font-bold mb-4 text-slate-700">The Data Economy Explained</h4>
-            <video 
-              src="app_value_videos/app_value_2.mp4"
-              controls
-              className="w-full rounded-lg"
-              preload="metadata"
-            >
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
@@ -1236,7 +1237,7 @@ const StatCard = ({ icon, title, value, description, tooltipText }) => (
       <p className="text-sm text-slate-700 mt-1">{description}</p>
     </div>
     {tooltipText && (
-      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 bg-slate-800 text-white text-sm rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20 shadow-2xl border-2 border-slate-700">
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 bg-white text-slate-900 text-sm rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20 shadow-2xl border-2 border-slate-300">
         {tooltipText}
       </div>
     )}
