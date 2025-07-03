@@ -198,7 +198,7 @@ const AIFinancialLiteracyApp = () => {
       </main>
 
       {/* Navigation */}
-      <nav className="fixed bottom-0 w-full bg-white px-4 sm:px-6 py-3 border-t border-slate-200 shadow-lg">
+      <nav className="fixed bottom-0 w-full bg-white px-4 sm:px-6 py-3 border-t border-slate-200 shadow-lg z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <button
             onClick={prevSlide}
