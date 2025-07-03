@@ -147,21 +147,24 @@ const AIFinancialLiteracyApp = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100 text-slate-800 overflow-hidden font-sans relative">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white backdrop-blur-lg z-50 px-6 py-3 border-b border-slate-200 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <img src="logos/gdatalogo_regular.webp" alt="G-Data Labs" className="h-10 w-auto" />
-            <div className="flex items-center gap-3">
-              <img src="logos/ailp3_logo.png" alt="AILP3" className="h-10 w-auto" />
-              <div>
-                <h1 className="text-xl font-bold text-slate-900">
-                  AI Financial Literacy
-                </h1>
-                <p className="text-xs text-slate-500">Your Data, Your Dollars, Your Dignity</p>
-              </div>
+      <header className="fixed top-0 w-full bg-white/80 backdrop-blur-lg z-50 px-4 sm:px-6 py-3 border-b border-slate-200">
+        {/* Main container: stacks vertically on small screens, becomes a row on larger screens */}
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          
+          {/* Group 1: Logos, Title, Subtitle. This will be the top element on mobile. */}
+          <div className="flex items-center gap-3">
+            <img src="logos/gdatalogo_regular.webp" alt="G-Data Labs" className="h-8 sm:h-10 w-auto" />
+            <img src="logos/ailp3_logo.png" alt="AILP3" className="h-8 sm:h-10 w-auto" />
+            <div>
+              <h1 className="text-lg sm:text-xl font-bold text-slate-900">
+                AI Financial Literacy
+              </h1>
+              <p className="text-xs text-slate-500">Your Data, Your Dollars, Your Dignity</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          
+          {/* Group 2: Edition, Progress Dots. This will be the bottom element on mobile. */}
+          <div className="flex items-center self-end sm:self-center gap-4">
             <div className="text-sm text-slate-500">Atlanta High School Edition</div>
             <div className="flex gap-1.5">
               {slides.map((_, index) => (
@@ -174,6 +177,7 @@ const AIFinancialLiteracyApp = () => {
               ))}
             </div>
           </div>
+
         </div>
       </header>
 
