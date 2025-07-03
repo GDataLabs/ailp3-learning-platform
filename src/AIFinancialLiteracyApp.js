@@ -151,11 +151,10 @@ const AIFinancialLiteracyApp = () => {
         {/* Main container: stacks vertically on small screens, becomes a row on larger screens */}
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           
-          {/* Group 1: Icon, Title, Subtitle. This will be the top element on mobile. */}
+          {/* Group 1: Logos, Title, Subtitle. This will be the top element on mobile. */}
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-tr from-blue-600 to-blue-400 rounded-lg shadow-md">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
+            <img src="logos/gdatalogo_regular.webp" alt="G-Data Labs" className="h-8 sm:h-10 w-auto" />
+            <img src="logos/ailp3_logo.png" alt="AILP3" className="h-8 sm:h-10 w-auto" />
             <div>
               <h1 className="text-lg sm:text-xl font-bold text-slate-900">
                 AI Financial Literacy
@@ -199,7 +198,7 @@ const AIFinancialLiteracyApp = () => {
       </main>
 
       {/* Navigation */}
-      <nav className="fixed bottom-0 w-full bg-white backdrop-blur-lg px-6 py-3 border-t border-slate-200 shadow-lg">
+      <nav className="fixed bottom-0 w-full bg-white px-4 sm:px-6 py-3 border-t border-slate-200 shadow-lg">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <button
             onClick={prevSlide}
