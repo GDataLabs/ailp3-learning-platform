@@ -235,6 +235,7 @@ const TitleSlide = ({ onStart }) => {
         { name: 'Atlanta Public Schools', src: 'logos/aps_logo.jpeg' },
         { name: 'Clark Atlanta University', src: 'logos/cau_logo.jpg' },
         { name: 'City of Atlanta', src: 'logos/camo_logo.png' },
+        { name: 'Operation Hope', src: 'logos/op_hope_logo.png' },
     ];
 
     return (
@@ -256,27 +257,24 @@ const TitleSlide = ({ onStart }) => {
                     </div>
                 </div>
 
+                <div className="mt-8 bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg max-w-2xl mx-auto">
+                    <h3 className="text-lg font-bold mb-4 text-slate-800">Welcome to AI Financial Literacy</h3>
+                    <video 
+                        src="intro_ai_avatar/AILP3_intro.mp4"
+                        controls
+                        className="w-full rounded-lg"
+                        preload="metadata"
+                    >
+                        Your browser does not support the video element.
+                    </video>
+                </div>
+
                 <button
                     onClick={onStart}
-                    className="mt-16 px-10 py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-xl font-semibold rounded-lg shadow-lg hover:scale-105 transition-transform"
+                    className="mt-8 px-10 py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-xl font-semibold rounded-lg shadow-lg hover:scale-105 transition-transform"
                 >
                     Start Session
                 </button>
-
-                <div className="mt-12 bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg max-w-md mx-auto">
-                    <h3 className="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
-                        <Music className="w-5 h-5 text-blue-500" />
-                        Listen to Our Introduction
-                    </h3>
-                    <audio 
-                        src="podcasts/intro_podcast.wav"
-                        controls
-                        className="w-full"
-                        preload="metadata"
-                    >
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
             </div>
         </div>
     );
@@ -340,6 +338,24 @@ const OpeningPoll = ({ responses, setPollResponses }) => {
         <div className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-full border border-slate-200 shadow-sm">
           <Sparkles className="w-5 h-5 text-blue-500" />
           <span className="text-lg text-slate-700">Real-time class data visualization</span>
+        </div>
+      </div>
+
+      {/* Podcast Section */}
+      <div className="max-w-md mx-auto">
+        <div className="bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg">
+          <h3 className="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
+            <Music className="w-5 h-5 text-blue-500" />
+            Listen to Our Introduction
+          </h3>
+          <audio 
+            src="podcasts/intro_podcast.wav"
+            controls
+            className="w-full"
+            preload="metadata"
+          >
+            Your browser does not support the audio element.
+          </audio>
         </div>
       </div>
       
