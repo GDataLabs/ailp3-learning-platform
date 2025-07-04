@@ -96,8 +96,15 @@ const AIFinancialLiteracyApp = () => {
     }
   }, [isTimerRunning, partnerActivityTime]);
 
-  const nextSlide = () => setCurrentSlide((prev) => Math.min(prev + 1, slides.length - 1));
-  const prevSlide = () => setCurrentSlide((prev) => Math.max(prev - 1, 0));
+  const nextSlide = () => {
+    setCurrentSlide((prev) => Math.min(prev + 1, slides.length - 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  const prevSlide = () => {
+    setCurrentSlide((prev) => Math.max(prev - 1, 0));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const slides = [
     // Title Page
