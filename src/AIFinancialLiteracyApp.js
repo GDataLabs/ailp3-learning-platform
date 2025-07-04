@@ -249,11 +249,11 @@ const TitleSlide = ({ onStart }) => {
     const logos = [
         { name: 'G-Data Labs', src: 'logos/gdatalogo_regular.webp' },
         { name: 'AILP3', src: 'logos/ailp3_logo.png' },
+        { name: 'Operation Hope', src: 'logos/op_hope_logo.png' },
         { name: 'Georgia State University', src: 'logos/gsu_logo.jpg' },
         { name: 'Atlanta Public Schools', src: 'logos/aps_logo.jpeg' },
         { name: 'Clark Atlanta University', src: 'logos/cau_logo.jpg' },
         { name: 'City of Atlanta', src: 'logos/camo_logo.png' },
-        { name: 'Operation Hope', src: 'logos/op_hope_logo.png' },
     ];
 
     return (
