@@ -780,22 +780,53 @@ const BiasModule = () => {
     <div className="space-y-10">
       <div className="text-center">
         <p className="text-xl mb-6 text-slate-700">AI doesn't just grant loans. It's making decisions everywhere. Let's see how hidden bias can have a huge impact.</p>
+        
+        {/* Add AI Bias Podcast */}
+        <div className="max-w-md mx-auto mb-8">
+          <div className="bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg">
+            <h3 className="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
+              <Music className="w-5 h-5 text-blue-500" />
+              AI Bias in Financial Services
+            </h3>
+            <audio 
+              src="podcasts/ai_bias.wav"
+              controls
+              className="w-full"
+              preload="metadata"
+            >
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-3 gap-6">
           {biasScenarios.map((scenario, index) => (
-            <div key={index} className="perspective-1000" onClick={() => setFlippedScenario(flippedScenario === index ? null : index)}>
-              <div className={`relative w-full h-80 transition-transform duration-700 transform-style-preserve-3d ${flippedScenario === index ? 'rotate-y-180' : ''}`}>
-                <div className="absolute w-full h-full backface-hidden bg-white p-6 rounded-2xl space-y-4 border border-slate-200 shadow-md cursor-pointer">
-                  {scenario.icon}
-                  <h4 className="text-xl font-bold mt-2 text-slate-800">{scenario.title}</h4>
-                  <p className="text-slate-600 text-sm leading-relaxed">{scenario.story}</p>
-                  <p className="text-xs text-blue-500 mt-4">Click to see the visual representation →</p>
-                </div>
-                <div className="absolute w-full h-full backface-hidden bg-white rounded-2xl border border-slate-200 shadow-md cursor-pointer rotate-y-180 overflow-hidden">
-                  <img 
-                    src={scenario.image} 
-                    alt={scenario.title}
-                    className="w-full h-full object-cover"
-                  />
+            <div key={index} className="space-y-4">
+              {/* Title above the card */}
+              <div className="text-center">
+                {scenario.icon}
+                <h4 className="text-xl font-bold mt-2 text-slate-800">{scenario.title}</h4>
+              </div>
+              
+              {/* Flippable card with image first */}
+              <div className="perspective-1000" onClick={() => setFlippedScenario(flippedScenario === index ? null : index)}>
+                <div className={`relative w-full h-80 transition-transform duration-700 transform-style-preserve-3d ${flippedScenario === index ? 'rotate-y-180' : ''}`}>
+                  {/* Front face - now shows the image */}
+                  <div className="absolute w-full h-full backface-hidden bg-white rounded-2xl border border-slate-200 shadow-md cursor-pointer overflow-hidden">
+                    <img 
+                      src={scenario.image} 
+                      alt={scenario.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white p-3">
+                      <p className="text-xs text-center">Click to read the story →</p>
+                    </div>
+                  </div>
+                  {/* Back face - now shows the story */}
+                  <div className="absolute w-full h-full backface-hidden bg-white p-6 rounded-2xl space-y-4 border border-slate-200 shadow-md cursor-pointer rotate-y-180 flex flex-col justify-center">
+                    <p className="text-slate-600 text-sm leading-relaxed">{scenario.story}</p>
+                    <p className="text-xs text-blue-500 mt-4 text-center">Click to see the image again →</p>
+                  </div>
                 </div>
               </div>
             </div>
