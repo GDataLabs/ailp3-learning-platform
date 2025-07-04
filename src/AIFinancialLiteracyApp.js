@@ -192,22 +192,48 @@ const AIFinancialLiteracyApp = () => {
                 </h2>
             )}
             {currentSlide === 1 && (
-              <div className="max-w-md mx-auto mb-8">
-                <div className="bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg">
-                  <h3 className="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
-                    <Music className="w-5 h-5 text-blue-500" />
-                    Listen to Our Introduction
-                  </h3>
-                  <audio 
-                    src="podcasts/intro_podcast.wav"
-                    controls
-                    className="w-full"
-                    preload="metadata"
-                  >
-                    Your browser does not support the audio element.
-                  </audio>
+              <>
+                <div className="max-w-md mx-auto mb-8">
+                  <div className="bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg">
+                    <h3 className="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
+                      <Music className="w-5 h-5 text-blue-500" />
+                      Listen to Our Introduction
+                    </h3>
+                    <audio 
+                      src="podcasts/intro_podcast.wav"
+                      controls
+                      className="w-full"
+                      preload="metadata"
+                    >
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
                 </div>
-              </div>
+
+                {/* Phone Screen Time Demo */}
+                <div className="max-w-2xl mx-auto mb-8">
+                  <div className="bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg">
+                    <h3 className="text-lg font-bold mb-4 text-slate-800 text-center">
+                      📱 Check Your Phone's App Usage
+                    </h3>
+                    <p className="text-sm text-slate-600 mb-4 text-center">
+                      Learn how to find your screen time before we start counting apps!
+                    </p>
+                    <div className="bg-slate-100 rounded-lg p-4">
+                      <iframe 
+                        src="phone-screentime.html"
+                        width="100%"
+                        height="700"
+                        frameBorder="0"
+                        className="rounded-lg"
+                        title="Phone Screen Time Demo"
+                      >
+                        Your browser does not support iframes.
+                      </iframe>
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
             <div className="slide-content">
               {slides[currentSlide].component}

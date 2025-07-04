@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Time Check Module</title>
+    <!-- Minimal design for embedding in Module 1 page -->
+    <style>
+        /* Clean, minimal design for embedding */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        }
+        
+        .module-wrapper {
+            display: inline-block;
+        }
+        
+        .container {
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .phone {
+            width: 300px;
+            height: 600px;
+            background: #000;
+            border-radius: 35px;
+            padding: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            position: relative;
+            margin: 0 auto;
+        }
+        
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 25px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        /* Lock Screen */
+        .lock-screen {
+            background: linear-gradient(to bottom, #1e3c72, #2a5298);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        
+        .time {
+            font-size: 60px;
+            font-weight: 200;
+            margin-bottom: 10px;
+        }
+        
+        .date {
+            font-size: 18px;
+            margin-bottom: 60px;
+        }
+        
+        .swipe-up {
+            position: absolute;
+            bottom: 30px;
+            font-size: 14px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Home Screen */
+        .home-screen {
+            background: #f0f0f0;
+            height: 100%;
+            padding: 40px 20px 20px;
+            display: none;
+        }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .app:hover {
+            transform: scale(1.1);
+        }
+        
+        .app-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .app-name {
+            font-size: 11px;
+            text-align: center;
+        }
+        
+        /* Settings Screen */
+        .settings-screen {
+            background: #f2f2f7;
+            height: 100%;
+            display: none;
+            overflow-y: auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+        }
+        
+        .back-button {
+            color: #007AFF;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+            margin-right: 50px;
+        }
+        
+        .settings-item {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        
+        .settings-item:hover {
+            background: #f0f0f0;
+        }
+        
+        .settings-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+        }
+        
+        /* Screen Time Screen */
+        .screentime-screen {
+            background: #f2f2f7;
+            height: 100%;
+            display: none;
+            overflow-y: auto;
+        }
+        
+        .usage-summary {
+            background: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .total-time {
+            font-size: 36px;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .usage-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .app-usage {
+            background: white;
+            margin: 15px;
+            padding: 15px;
+            border-radius: 12px;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .app-stat {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .app-stat:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .app-stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .app-stat-info {
+            flex: 1;
+        }
+        
+        .app-stat-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .app-stat-time {
+            font-size: 18px;
+            color: #666;
+            font-weight: 300;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            margin: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .instruction {
+            color: #666;
+            margin-top: 20px;
+            font-size: 14px;
+            max-width: 300px;
+            line-height: 1.5;
+        }
+        
+        /* Add .no-instructions to body to hide instructions */
+        body.no-instructions .instruction {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="module-wrapper">
+        <div class="container">
+        <div class="phone">
+            <div class="screen" id="phoneScreen">
+                <!-- Lock Screen -->
+                <div class="lock-screen" id="lockScreen">
+                    <div class="time">10:23</div>
+                    <div class="date">Tuesday, January 7</div>
+                    <div class="swipe-up">Swipe up to unlock</div>
+                </div>
+                
+                <!-- Home Screen -->
+                <div class="home-screen" id="homeScreen">
+                    <div class="app-grid">
+                        <div class="app">
+                            <div class="app-icon" style="background: #FF3B30;">📱</div>
+                            <div class="app-name">Phone</div>
+                        </div>
+                        <div class="app">
+                            <div class="app-icon" style="background: #34C759;">💬</div>
+                            <div class="app-name">Messages</div>
+                        </div>
+                        <div class="app" onclick="openSettings()">
+                            <div class="app-icon" style="background: #8E8E93;">⚙️</div>
+                            <div class="app-name">Settings</div>
+                        </div>
+                        <div class="app">
+                            <div class="app-icon" style="background: #007AFF;">📷</div>
+                            <div class="app-name">Camera</div>
+                        </div>
+                        <div class="app">
+                            <div class="app-icon" style="background: linear-gradient(45deg, #f093fb, #f5576c);">📸</div>
+                            <div class="app-name">Instagram</div>
+                        </div>
+                        <div class="app">
+                            <div class="app-icon" style="background: #000;">🎵</div>
+                            <div class="app-name">TikTok</div>
+                        </div>
+                        <div class="app">
+                            <div class="app-icon" style="background: #1DA1F2;">🐦</div>
+                            <div class="app-name">Twitter</div>
+                        </div>
+                        <div class="app">
+                            <div class="app-icon" style="background: #FF0000;">▶️</div>
+                            <div class="app-name">YouTube</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Screen -->
+                <div class="settings-screen" id="settingsScreen">
+                    <div class="header">
+                        <div class="back-button" onclick="goHome()">‹ Back</div>
+                        <div class="header-title">Settings</div>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-icon" style="background: #FF3B30;">✈️</div>
+                        <div>Airplane Mode</div>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-icon" style="background: #007AFF;">📶</div>
+                        <div>Wi-Fi</div>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-icon" style="background: #34C759;">📱</div>
+                        <div>Cellular</div>
+                    </div>
+                    <div class="settings-item" onclick="openScreenTime()">
+                        <div class="settings-icon" style="background: #5856D6;">⏱️</div>
+                        <div>Screen Time / Digital Wellbeing</div>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-icon" style="background: #FF9500;">🔔</div>
+                        <div>Notifications</div>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-icon" style="background: #FF3B30;">🔊</div>
+                        <div>Sounds & Haptics</div>
+                    </div>
+                </div>
+                
+                <!-- Screen Time Screen -->
+                <div class="screentime-screen" id="screentimeScreen">
+                    <div class="header">
+                        <div class="back-button" onclick="goToSettings()">‹ Back</div>
+                        <div class="header-title">Screen Time</div>
+                    </div>
+                    
+                    <div class="usage-summary">
+                        <div class="total-time">5h 47m</div>
+                        <div class="usage-label">Daily Average</div>
+                    </div>
+                    
+                    <div class="warning">
+                        ⚠️ You spent 41% more time on your phone than last week!
+                    </div>
+                    
+                    <div class="app-usage">
+                        <div class="usage-title">Most Used Apps - Yesterday</div>
+                        
+                        <div class="app-stat">
+                            <div class="app-stat-icon" style="background: #000;">🎵</div>
+                            <div class="app-stat-info">
+                                <div class="app-stat-name">TikTok</div>
+                                <div class="app-stat-time">2h 34m</div>
+                            </div>
+                        </div>
+                        
+                        <div class="app-stat">
+                            <div class="app-stat-icon" style="background: linear-gradient(45deg, #f093fb, #f5576c);">📸</div>
+                            <div class="app-stat-info">
+                                <div class="app-stat-name">Instagram</div>
+                                <div class="app-stat-time">1h 45m</div>
+                            </div>
+                        </div>
+                        
+                        <div class="app-stat">
+                            <div class="app-stat-icon" style="background: #FF0000;">▶️</div>
+                            <div class="app-stat-info">
+                                <div class="app-stat-name">YouTube</div>
+                                <div class="app-stat-time">1h 12m</div>
+                            </div>
+                        </div>
+                        
+                        <div class="app-stat">
+                            <div class="app-stat-icon" style="background: #25D366;">💬</div>
+                            <div class="app-stat-info">
+                                <div class="app-stat-name">WhatsApp</div>
+                                <div class="app-stat-time">16m</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="warning" style="background: #d4edda; color: #155724;">
+                        💡 Tip: That's 5+ hours that could be spent learning skills or earning money!
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="instruction" id="instruction">Swipe up on the phone screen to begin</div>
+    </div>
+
+    <script>
+        const phoneScreen = document.getElementById('phoneScreen');
+        const lockScreen = document.getElementById('lockScreen');
+        const homeScreen = document.getElementById('homeScreen');
+        const settingsScreen = document.getElementById('settingsScreen');
+        const screentimeScreen = document.getElementById('screentimeScreen');
+        const instruction = document.getElementById('instruction');
+        
+        let startY = 0;
+        let currentY = 0;
+        let isLocked = true;
+        
+        // Touch events for swipe
+        phoneScreen.addEventListener('touchstart', handleTouchStart);
+        phoneScreen.addEventListener('touchmove', handleTouchMove);
+        phoneScreen.addEventListener('touchend', handleTouchEnd);
+        
+        // Mouse events for desktop
+        phoneScreen.addEventListener('mousedown', handleMouseDown);
+        phoneScreen.addEventListener('mousemove', handleMouseMove);
+        phoneScreen.addEventListener('mouseup', handleMouseUp);
+        phoneScreen.addEventListener('mouseleave', handleMouseUp);
+        
+        let isMouseDown = false;
+        
+        function handleTouchStart(e) {
+            if (!isLocked) return;
+            startY = e.touches[0].clientY;
+        }
+        
+        function handleTouchMove(e) {
+            if (!isLocked) return;
+            currentY = e.touches[0].clientY;
+            const diff = startY - currentY;
+            if (diff > 0) {
+                lockScreen.style.transform = `translateY(-${Math.min(diff, 100)}px)`;
+            }
+        }
+        
+        function handleTouchEnd(e) {
+            if (!isLocked) return;
+            const diff = startY - currentY;
+            if (diff > 50) {
+                unlockPhone();
+            } else {
+                lockScreen.style.transform = 'translateY(0)';
+            }
+        }
+        
+        function handleMouseDown(e) {
+            if (!isLocked) return;
+            isMouseDown = true;
+            startY = e.clientY;
+        }
+        
+        function handleMouseMove(e) {
+            if (!isLocked || !isMouseDown) return;
+            currentY = e.clientY;
+            const diff = startY - currentY;
+            if (diff > 0) {
+                lockScreen.style.transform = `translateY(-${Math.min(diff, 100)}px)`;
+            }
+        }
+        
+        function handleMouseUp(e) {
+            if (!isLocked || !isMouseDown) return;
+            isMouseDown = false;
+            const diff = startY - currentY;
+            if (diff > 50) {
+                unlockPhone();
+            } else {
+                lockScreen.style.transform = 'translateY(0)';
+            }
+        }
+        
+        function unlockPhone() {
+            isLocked = false;
+            lockScreen.style.display = 'none';
+            homeScreen.style.display = 'block';
+            instruction.textContent = 'Great! Now tap on the Settings app (⚙️)';
+        }
+        
+        function openSettings() {
+            homeScreen.style.display = 'none';
+            settingsScreen.style.display = 'block';
+            instruction.textContent = 'Perfect! Now tap on "Screen Time / Digital Wellbeing"';
+        }
+        
+        function openScreenTime() {
+            settingsScreen.style.display = 'none';
+            screentimeScreen.style.display = 'block';
+            instruction.textContent = 'Wow! 5+ hours daily on social media. Imagine earning $15/hour instead!';
+        }
+        
+        function goHome() {
+            settingsScreen.style.display = 'none';
+            homeScreen.style.display = 'block';
+            instruction.textContent = 'Tap on the Settings app (⚙️)';
+        }
+        
+        function goToSettings() {
+            screentimeScreen.style.display = 'none';
+            settingsScreen.style.display = 'block';
+            instruction.textContent = 'Tap on "Screen Time / Digital Wellbeing"';
+        }
+    </script>
+</body>
+</html>
