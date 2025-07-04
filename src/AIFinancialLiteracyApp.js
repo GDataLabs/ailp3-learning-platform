@@ -155,6 +155,7 @@ const AIFinancialLiteracyApp = () => {
           <div className="flex items-center gap-3">
             <img src="logos/gdatalogo_regular.webp" alt="G-Data Labs" className="h-8 sm:h-10 w-auto" />
             <img src="logos/ailp3_logo.png" alt="AILP3" className="h-8 sm:h-10 w-auto" />
+            <img src="logos/op_hope_logo.png" alt="Operation Hope" className="h-8 sm:h-10 w-auto" />
             <div>
               <h1 className="text-lg sm:text-xl font-bold text-slate-900">
                 AI Financial Literacy
