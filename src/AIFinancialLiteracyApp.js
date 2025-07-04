@@ -1012,6 +1012,30 @@ const PartnerActivity = ({ time, isRunning, setIsRunning, setPartnerActivityTime
       <div className="text-center space-y-4">
         <p className="text-xl text-slate-700">Create an AI-powered financial solution for your generation!</p>
         
+        {/* Teen Finance Game */}
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg">
+            <h3 className="text-lg font-bold mb-4 text-slate-800 text-center">
+              💰 Money Moves: Teen Finance Quest
+            </h3>
+            <div className="bg-slate-100 rounded-lg p-4">
+              <iframe 
+                src="teen-finance-game.html"
+                width="100%"
+                height="600"
+                frameBorder="0"
+                className="rounded-lg"
+                title="Teen Finance Game"
+              >
+                Your browser does not support iframes.
+              </iframe>
+            </div>
+            <p className="text-sm text-slate-600 mt-2 text-center">
+              Practice financial decision-making while you work on your project!
+            </p>
+          </div>
+        </div>
+        
         <div className="inline-flex items-center justify-center">
           <div className="relative w-48 h-48">
             <svg className="transform -rotate-90 w-48 h-48">

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Moves: Teen Finance Quest</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+        }
+        
+        #gameContainer {
+            background-color: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        
+        canvas {
+            border: 4px solid #0f4c75;
+            image-rendering: pixelated;
+            cursor: pointer;
+        }
+        
+        #ui {
+            color: #00ff00;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .stat {
+            display: inline-block;
+            margin: 0 15px;
+            padding: 5px 10px;
+            background-color: #0f4c75;
+            border-radius: 5px;
+        }
+        
+        #message {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #1b262c;
+            border-radius: 5px;
+            min-height: 40px;
+            color: #ffffff;
+        }
+        
+        .good {
+            color: #00ff00 !important;
+        }
+        
+        .bad {
+            color: #ff0000 !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="640" height="480"></canvas>
+        <div id="ui">
+            <div class="stat">Money: $<span id="money">100</span></div>
+            <div class="stat">Financial Score: <span id="score">0</span></div>
+            <div class="stat">Day: <span id="day">1</span></div>
+        </div>
+        <div id="message">Choose your character to start!</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        
+        // Game state
+        let gameState = 'characterSelect';
+        let selectedCharacter = null;
+        let money = 100;
+        let score = 0;
+        let day = 1;
+        let currentChoice = null;
+        
+        // Interactive objects in the room
+        const objects = [
+            {
+                x: 100, y: 200, width: 80, height: 100,
+                name: 'Computer',
+                choices: [
+                    {
+                        text: 'Learn about investing online (Free)',
+                        money: 0,
+                        score: 10,
+                        message: 'Great! You learned about compound interest and index funds!'
+                    },
+                    {
+                        text: 'Buy expensive gaming gear ($80)',
+                        money: -80,
+                        score: -5,
+                        message: 'The gaming gear is fun but that was most of your money...'
+                    }
+                ]
+            },
+            {
+                x: 300, y: 250, width: 60, height: 80,
+                name: 'Piggy Bank',
+                choices: [
+                    {
+                        text: 'Save $20 for the future',
+                        money: -20,
+                        score: 15,
+                        message: 'Excellent! Building savings habits early is key to financial success!'
+                    },
+                    {
+                        text: 'Skip saving this time',
+                        money: 0,
+                        score: -3,
+                        message: 'Skipping savings can become a bad habit. Try to save regularly!'
+                    }
+                ]
+            },
+            {
+                x: 450, y: 180, width: 100, height: 120,
+                name: 'Job Board',
+                choices: [
+                    {
+                        text: 'Take a part-time job ($50)',
+                        money: 50,
+                        score: 20,
+                        message: 'Awesome! Earning money teaches valuable skills and responsibility!'
+                    },
+                    {
+                        text: 'Stay home and play games',
+                        money: 0,
+                        score: -5,
+                        message: 'Missed opportunity! Working builds character and financial independence.'
+                    }
+                ]
+            },
+            {
+                x: 200, y: 350, width: 80, height: 60,
+                name: 'Phone',
+                choices: [
+                    {
+                        text: 'Use budgeting app (Free)',
+                        money: 0,
+                        score: 12,
+                        message: 'Smart move! Tracking expenses helps you understand where money goes!'
+                    },
+                    {
+                        text: 'Buy expensive mobile game items ($30)',
+                        money: -30,
+                        score: -8,
+                        message: 'In-app purchases add up quickly! Be careful with digital spending.'
+                    }
+                ]
+            }
+        ];
+        
+        // Draw pixel art character
+        function drawCharacter(x, y, type, scale = 1) {
+            const size = 8 * scale;
+            
+            // Head
+            ctx.fillStyle = '#8b4513';
+            ctx.fillRect(x + size * 3, y, size * 2, size * 2);
+            
+            // Hair
+            ctx.fillStyle = '#2d1b00';
+            if (type === 'boy') {
+                // Short afro
+                ctx.fillRect(x + size * 2.5, y - size * 0.5, size * 3, size * 1.5);
+                ctx.fillRect(x + size * 3, y, size * 2, size);
+            } else {
+                // Afro puffs
+                ctx.fillRect(x + size * 2, y - size * 0.5, size * 1.5, size * 2);
+                ctx.fillRect(x + size * 4.5, y - size * 0.5, size * 1.5, size * 2);
+                ctx.fillRect(x + size * 3, y, size * 2, size);
+            }
+            
+            // Eyes
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(x + size * 3, y + size, size * 0.5, size * 0.5);
+            ctx.fillRect(x + size * 4.5, y + size, size * 0.5, size * 0.5);
+            
+            // Body
+            ctx.fillStyle = type === 'boy' ? '#4169e1' : '#ff1493';
+            ctx.fillRect(x + size * 2, y + size * 2, size * 4, size * 4);
+            
+            // Arms
+            ctx.fillStyle = '#8b4513';
+            ctx.fillRect(x + size, y + size * 2, size, size * 2);
+            ctx.fillRect(x + size * 6, y + size * 2, size, size * 2);
+            
+            // Legs
+            ctx.fillStyle = '#000080';
+            ctx.fillRect(x + size * 2.5, y + size * 6, size * 1.5, size * 2);
+            ctx.fillRect(x + size * 4, y + size * 6, size * 1.5, size * 2);
+        }
+        
+        // Draw room
+        function drawRoom() {
+            // Clear canvas
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Floor
+            ctx.fillStyle = '#8b4513';
+            ctx.fillRect(0, 400, canvas.width, 80);
+            
+            // Wall
+            ctx.fillStyle = '#f0e68c';
+            ctx.fillRect(0, 0, canvas.width, 400);
+            
+            // Game title at top
+            ctx.fillStyle = '#000000';
+            ctx.font = '20px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('MONEY MOVES', canvas.width/2, 30);
+            
+            // Draw objects
+            objects.forEach(obj => {
+                ctx.fillStyle = '#654321';
+                ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+                
+                // Add labels
+                ctx.fillStyle = '#000000';
+                ctx.font = '12px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(obj.name, obj.x + obj.width/2, obj.y - 5);
+            });
+            
+            // Draw character in room
+            if (selectedCharacter) {
+                drawCharacter(280, 300, selectedCharacter, 2);
+            }
+        }
+        
+        // Draw character selection screen
+        function drawCharacterSelect() {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Title
+            ctx.fillStyle = '#00ff00';
+            ctx.font = '32px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('MONEY MOVES', canvas.width/2, 60);
+            ctx.font = '24px monospace';
+            ctx.fillText('Teen Finance Quest', canvas.width/2, 95);
+            
+            ctx.font = '20px monospace';
+            ctx.fillText('Choose Your Character', canvas.width/2, 140);
+            
+            // Boy option
+            ctx.fillStyle = '#333333';
+            ctx.fillRect(150, 200, 140, 180);
+            drawCharacter(185, 250, 'boy', 3);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '16px monospace';
+            ctx.fillText('Boy', 220, 370);
+            
+            // Girl option
+            ctx.fillStyle = '#333333';
+            ctx.fillRect(350, 200, 140, 180);
+            drawCharacter(385, 250, 'girl', 3);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('Girl', 420, 370);
+        }
+        
+        // Draw choice dialog
+        function drawChoiceDialog() {
+            if (!currentChoice) return;
+            
+            // Dialog background
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Dialog box
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(120, 100, 400, 280);
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(120, 100, 400, 280);
+            
+            // Title
+            ctx.fillStyle = '#00ff00';
+            ctx.font = '24px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(currentChoice.name, 320, 140);
+            
+            // Choices
+            currentChoice.choices.forEach((choice, index) => {
+                const y = 200 + index * 80;
+                ctx.fillStyle = '#0f4c75';
+                ctx.fillRect(140, y - 30, 360, 60);
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '16px monospace';
+                ctx.fillText(choice.text, 320, y);
+                
+                // Money indicator
+                if (choice.money !== 0) {
+                    ctx.fillStyle = choice.money > 0 ? '#00ff00' : '#ff0000';
+                    ctx.fillText((choice.money > 0 ? '+' : '') + '$' + Math.abs(choice.money), 320, y + 25);
+                }
+            });
+            
+            ctx.fillStyle = '#888888';
+            ctx.font = '14px monospace';
+            ctx.fillText('Click to choose or press ESC to cancel', 320, 360);
+        }
+        
+        // Update UI
+        function updateUI() {
+            document.getElementById('money').textContent = money;
+            document.getElementById('score').textContent = score;
+            document.getElementById('day').textContent = day;
+        }
+        
+        // Show message
+        function showMessage(text, isGood) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = isGood ? 'good' : 'bad';
+        }
+        
+        // Handle click
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            if (gameState === 'characterSelect') {
+                // Check boy selection
+                if (x >= 150 && x <= 290 && y >= 200 && y <= 380) {
+                    selectedCharacter = 'boy';
+                    gameState = 'room';
+                    showMessage('Great choice! Click on objects to make financial decisions.', true);
+                }
+                // Check girl selection
+                else if (x >= 350 && x <= 490 && y >= 200 && y <= 380) {
+                    selectedCharacter = 'girl';
+                    gameState = 'room';
+                    showMessage('Great choice! Click on objects to make financial decisions.', true);
+                }
+            }
+            else if (gameState === 'room' && !currentChoice) {
+                // Check object clicks
+                objects.forEach(obj => {
+                    if (x >= obj.x && x <= obj.x + obj.width &&
+                        y >= obj.y && y <= obj.y + obj.height) {
+                        currentChoice = obj;
+                    }
+                });
+            }
+            else if (currentChoice) {
+                // Check choice selection
+                currentChoice.choices.forEach((choice, index) => {
+                    const choiceY = 200 + index * 80;
+                    if (x >= 140 && x <= 500 && y >= choiceY - 30 && y <= choiceY + 30) {
+                        // Apply choice effects
+                        money += choice.money;
+                        score += choice.score;
+                        showMessage(choice.message, choice.score > 0);
+                        currentChoice = null;
+                        day++;
+                        updateUI();
+                        
+                        // Check game over conditions
+                        if (money < 0) {
+                            gameState = 'gameOver';
+                            showMessage('Game Over! You ran out of money. Financial planning is important!', false);
+                        }
+                        else if (day > 7) {
+                            gameState = 'gameOver';
+                            const message = score > 50 ? 
+                                `Excellent! You finished with $${money} and a score of ${score}. Great financial habits!` :
+                                `You finished with $${money} and a score of ${score}. Keep learning about finances!`;
+                            showMessage(message, score > 50);
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Handle escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && currentChoice) {
+                currentChoice = null;
+            }
+        });
+        
+        // Game loop
+        function gameLoop() {
+            if (gameState === 'characterSelect') {
+                drawCharacterSelect();
+            }
+            else if (gameState === 'room' || gameState === 'gameOver') {
+                drawRoom();
+                drawChoiceDialog();
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Start game
+        updateUI();
+        gameLoop();
+    </script>
+</body>
+</html>
