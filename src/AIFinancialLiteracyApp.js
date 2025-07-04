@@ -190,6 +190,24 @@ const AIFinancialLiteracyApp = () => {
                 {slides[currentSlide].title}
                 </h2>
             )}
+            {currentSlide === 1 && (
+              <div className="max-w-md mx-auto mb-8">
+                <div className="bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg">
+                  <h3 className="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
+                    <Music className="w-5 h-5 text-blue-500" />
+                    Listen to Our Introduction
+                  </h3>
+                  <audio 
+                    src="podcasts/intro_podcast.wav"
+                    controls
+                    className="w-full"
+                    preload="metadata"
+                  >
+                    Your browser does not support the audio element.
+                  </audio>
+                </div>
+              </div>
+            )}
             <div className="slide-content">
               {slides[currentSlide].component}
             </div>
@@ -260,7 +278,7 @@ const TitleSlide = ({ onStart }) => {
                 <div className="mt-8 bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg max-w-2xl mx-auto">
                     <h3 className="text-lg font-bold mb-4 text-slate-800">Welcome to AI Financial Literacy</h3>
                     <video 
-                        src="intro_ai_avatar/AILP3_intro.mp4"
+                        src="AILP3_intro.mp4"
                         controls
                         className="w-full rounded-lg"
                         preload="metadata"
@@ -338,24 +356,6 @@ const OpeningPoll = ({ responses, setPollResponses }) => {
         <div className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-full border border-slate-200 shadow-sm">
           <Sparkles className="w-5 h-5 text-blue-500" />
           <span className="text-lg text-slate-700">Real-time class data visualization</span>
-        </div>
-      </div>
-
-      {/* Podcast Section */}
-      <div className="max-w-md mx-auto">
-        <div className="bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg">
-          <h3 className="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
-            <Music className="w-5 h-5 text-blue-500" />
-            Listen to Our Introduction
-          </h3>
-          <audio 
-            src="podcasts/intro_podcast.wav"
-            controls
-            className="w-full"
-            preload="metadata"
-          >
-            Your browser does not support the audio element.
-          </audio>
         </div>
       </div>
       
