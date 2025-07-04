@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/ailp3-learning-platform/static/css/main.c2e8621a.css",
-    "main.js": "/ailp3-learning-platform/static/js/main.faa2e67d.js",
+    "main.js": "/ailp3-learning-platform/static/js/main.967109ae.js",
     "static/js/453.e6643842.chunk.js": "/ailp3-learning-platform/static/js/453.e6643842.chunk.js",
     "index.html": "/ailp3-learning-platform/index.html",
     "main.c2e8621a.css.map": "/ailp3-learning-platform/static/css/main.c2e8621a.css.map",
-    "main.faa2e67d.js.map": "/ailp3-learning-platform/static/js/main.faa2e67d.js.map",
+    "main.967109ae.js.map": "/ailp3-learning-platform/static/js/main.967109ae.js.map",
     "453.e6643842.chunk.js.map": "/ailp3-learning-platform/static/js/453.e6643842.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c2e8621a.css",
-    "static/js/main.faa2e67d.js"
+    "static/js/main.967109ae.js"
   ]
 }

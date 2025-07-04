@@ -645,64 +645,64 @@ const DataDollarsModule = ({ setUserDataValue, userDataValue }) => {
         </div>
       </div>
       
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className="space-y-6">
-          <h3 className="text-2xl font-bold flex items-center gap-2 text-slate-800">
-            <DollarSign className="w-8 h-8 text-blue-500" />
-            Data Dignity Calculator
-          </h3>
-          
-          <div className="space-y-4">
-            {Object.entries(appUsage).map(([app, hours]) => (
-              <div key={app} className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="capitalize text-lg text-slate-700">{app}</span>
-                  <span className="text-blue-600 font-mono">{hours}h/day</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="8"
-                  value={hours}
-                  onChange={(e) => setAppUsage({...appUsage, [app]: parseInt(e.target.value)})}
-                  className="w-full h-3 bg-slate-300 rounded-lg appearance-none cursor-pointer slider border border-slate-400"
-                />
+      {/* Data Dignity Calculator */}
+      <div className="max-w-2xl mx-auto space-y-6">
+        <h3 className="text-2xl font-bold flex items-center gap-2 text-slate-800 text-center justify-center">
+          <DollarSign className="w-8 h-8 text-blue-500" />
+          Data Dignity Calculator
+        </h3>
+        
+        <div className="space-y-4">
+          {Object.entries(appUsage).map(([app, hours]) => (
+            <div key={app} className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="capitalize text-lg text-slate-700">{app}</span>
+                <span className="text-blue-600 font-mono">{hours}h/day</span>
               </div>
-            ))}
-          </div>
-          
-          <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-6 rounded-2xl text-white shadow-lg">
-            <p className="text-sm font-semibold uppercase">Your Annual Data Value</p>
-            <p className="text-4xl font-bold">${(userDataValue * 365).toLocaleString()}</p>
-            <p className="text-sm mt-2">But companies make billions from collective data!</p>
-          </div>
+              <input
+                type="range"
+                min="0"
+                max="8"
+                value={hours}
+                onChange={(e) => setAppUsage({...appUsage, [app]: parseInt(e.target.value)})}
+                className="w-full h-3 bg-slate-300 rounded-lg appearance-none cursor-pointer slider border border-slate-400"
+              />
+            </div>
+          ))}
         </div>
         
-        <div className="space-y-6">
-          <h3 className="text-2xl font-bold text-slate-800">The Reality Check</h3>
-          <div className="space-y-4">
-            <StatCard
-              icon={<Globe className="w-6 h-6" />}
-              title="The Creator Economy"
-              value="$250 Billion Market"
-              description="AI uses your creative data (art, music, videos) to generate new content, fueling a massive market."
-              tooltipText="The creator economy is projected to nearly double to $480 billion by 2027. Generative AI is a key driver, trained on vast datasets of existing content. Source: Goldman Sachs Research."
-            />
-            <StatCard
-              icon={<Target className="w-6 h-6" />}
-              title="TikTok Strategy"
-              value="Teens are 'most susceptible'"
-              description="To engagement algorithms"
-              tooltipText="TikTok's algorithm is famously powerful, creating a personalized 'For You' page that keeps users engaged for long periods. Critics argue this design can be addictive and may expose teens to harmful content. Source: The Wall Street Journal."
-            />
-            <StatCard
-              icon={<Shield className="w-6 h-6" />}
-              title="Your Digital Worth"
-              value="$100-300 annually"
-              description="Per platform you actively use"
-              tooltipText="While your individual data's value varies, data brokers sell aggregated profiles for anywhere from less than a dollar to over $1,000. Your worth increases based on specific, valuable traits. Source: 'The Price of Your Data,' Financial Times."
-            />
-          </div>
+        <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-6 rounded-2xl text-white shadow-lg">
+          <p className="text-sm font-semibold uppercase">Your Annual Data Value</p>
+          <p className="text-4xl font-bold">${(userDataValue * 365).toLocaleString()}</p>
+          <p className="text-sm mt-2">But companies make billions from collective data!</p>
+        </div>
+      </div>
+
+      {/* The Reality Check */}
+      <div className="max-w-4xl mx-auto space-y-6">
+        <h3 className="text-2xl font-bold text-slate-800 text-center">The Reality Check</h3>
+        <div className="grid md:grid-cols-3 gap-4">
+          <StatCard
+            icon={<Globe className="w-6 h-6" />}
+            title="The Creator Economy"
+            value="$250 Billion Market"
+            description="AI uses your creative data (art, music, videos) to generate new content, fueling a massive market."
+            tooltipText="The creator economy is projected to nearly double to $480 billion by 2027. Generative AI is a key driver, trained on vast datasets of existing content. Source: Goldman Sachs Research."
+          />
+          <StatCard
+            icon={<Target className="w-6 h-6" />}
+            title="TikTok Strategy"
+            value="Teens are 'most susceptible'"
+            description="To engagement algorithms"
+            tooltipText="TikTok's algorithm is famously powerful, creating a personalized 'For You' page that keeps users engaged for long periods. Critics argue this design can be addictive and may expose teens to harmful content. Source: The Wall Street Journal."
+          />
+          <StatCard
+            icon={<Shield className="w-6 h-6" />}
+            title="Your Digital Worth"
+            value="$100-300 annually"
+            description="Per platform you actively use"
+            tooltipText="While your individual data's value varies, data brokers sell aggregated profiles for anywhere from less than a dollar to over $1,000. Your worth increases based on specific, valuable traits. Source: 'The Price of Your Data,' Financial Times."
+          />
         </div>
       </div>
 
