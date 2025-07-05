@@ -75,7 +75,7 @@ const TitlePageBackground = () => {
 
 const AIFinancialLiteracyApp = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [pollResponses, setPollResponses] = useState({});
+  const [pollResponses, setPollResponses] = useState([]);
   const [userDataValue, setUserDataValue] = useState(0);
   const [wordCloudWords, setWordCloudWords] = useState([]);
   const [selectedPrompt, setSelectedPrompt] = useState('');
@@ -335,20 +335,20 @@ const TitleSlide = ({ onStart }) => {
 
 // Component for Opening Poll
 const OpeningPoll = ({ responses, setPollResponses }) => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputApps, setInputApps] = useState('');
+  const [inputHours, setInputHours] = useState('');
   const [studentCount, setStudentCount] = useState(0);
   const [lastAdded, setLastAdded] = useState(null);
   
   const handleAddResponse = () => {
-    const num = parseInt(inputValue);
-    if (!isNaN(num) && num >= 0 && num <= 50) {
-      setPollResponses(prev => ({
-        ...prev,
-        [num]: (prev[num] || 0) + 1
-      }));
+    const apps = parseInt(inputApps);
+    const hours = parseFloat(inputHours);
+    if (!isNaN(apps) && apps >= 0 && apps <= 50 && !isNaN(hours) && hours >= 0 && hours <= 24) {
+      setPollResponses(prev => [...prev, { apps, hours, id: Date.now() }]);
       setStudentCount(prev => prev + 1);
-      setLastAdded(num);
-      setInputValue('');
+      setLastAdded({ apps, hours });
+      setInputApps('');
+      setInputHours('');
       
       // Reset highlight after animation
       setTimeout(() => setLastAdded(null), 1500);
@@ -362,31 +362,20 @@ const OpeningPoll = ({ responses, setPollResponses }) => {
   };
   
   // Calculate stats
-  const totalResponses = Object.values(responses).reduce((sum, count) => sum + count, 0);
-  const totalApps = Object.entries(responses).reduce((sum, [apps, count]) => sum + (parseInt(apps) * count), 0);
+  const totalResponses = responses.length;
+  const totalApps = responses.reduce((sum, r) => sum + r.apps, 0);
+  const totalHours = responses.reduce((sum, r) => sum + r.hours, 0);
   const averageApps = totalResponses > 0 ? (totalApps / totalResponses).toFixed(1) : 0;
+  const averageHours = totalResponses > 0 ? (totalHours / totalResponses).toFixed(1) : 0;
   
-  // Find mode (most common number of apps)
-  const mode = Object.entries(responses).reduce((max, [apps, count]) => 
-    count > (responses[max] || 0) ? apps : max, '0'
-  );
-  const modeCount = responses[mode] || 0;
-  
-  // Create array for bar chart (0-30 apps)
-  const chartData = Array.from({ length: 31 }, (_, i) => ({
-    apps: i,
-    count: responses[i] || 0
-  }));
-
-  // Find the max count for dynamic scaling
-  const maxCount = Math.max(0, ...Object.values(responses));
-  const yAxisMax = Math.max(10, Math.ceil(maxCount / 5) * 5); // Ensure a minimum axis of 10, and round up to nearest 5
-  const chartHeight = 256; // Corresponds to h-64 (16rem * 16px/rem)
+  // Find correlations
+  const highUsageStudents = responses.filter(r => r.hours > 5).length;
+  const multiAppUsers = responses.filter(r => r.apps > 15).length;
   
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
-        <p className="text-2xl mb-4 text-slate-700">📱 Let's see how many apps utilize your data.</p>
+        <p className="text-2xl mb-4 text-slate-700">📱 Let's map the relationship between apps and screen time.</p>
         <div className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-full border border-slate-200 shadow-sm">
           <Sparkles className="w-5 h-5 text-blue-500" />
           <span className="text-lg text-slate-700">Real-time class data visualization</span>
@@ -397,24 +386,43 @@ const OpeningPoll = ({ responses, setPollResponses }) => {
       <div className="max-w-md mx-auto mb-8">
         <div className="bg-white p-6 rounded-2xl space-y-4 border border-slate-200 shadow-lg">
           <h3 className="text-lg font-bold text-slate-900">Ask Each Student:</h3>
-          <p className="text-slate-600">"How many different apps did you use yesterday?"</p>
+          <p className="text-slate-600">"How many apps did you use AND how many hours on your phone yesterday?"</p>
           
-          <div className="flex gap-2">
-            <input
-              type="number"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Enter number of apps"
-              min="0"
-              max="50"
-              className="flex-1 px-4 py-2 bg-slate-100 border border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none text-xl font-mono text-center text-slate-800"
-            />
+          <div className="space-y-3">
+            <div>
+              <label className="text-sm text-slate-600 block mb-1">Number of Apps Used:</label>
+              <input
+                type="number"
+                value={inputApps}
+                onChange={(e) => setInputApps(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="0-50 apps"
+                min="0"
+                max="50"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none text-xl font-mono text-center text-slate-800"
+              />
+            </div>
+            
+            <div>
+              <label className="text-sm text-slate-600 block mb-1">Hours on Phone:</label>
+              <input
+                type="number"
+                value={inputHours}
+                onChange={(e) => setInputHours(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="0-24 hours"
+                min="0"
+                max="24"
+                step="0.5"
+                className="w-full px-4 py-2 bg-slate-100 border border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none text-xl font-mono text-center text-slate-800"
+              />
+            </div>
+            
             <button
               onClick={handleAddResponse}
-              className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:opacity-90 transition-all font-semibold"
+              className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:opacity-90 transition-all font-semibold"
             >
-              Add
+              Add Student Data
             </button>
           </div>
           
@@ -425,27 +433,35 @@ const OpeningPoll = ({ responses, setPollResponses }) => {
             {studentCount === 30 && <span className="ml-2 text-green-600">🎉 Full house!</span>}
           </div>
           
-          {/* Quick input buttons for common values */}
-          <div className="flex gap-2 flex-wrap">
-            <p className="text-xs text-slate-500 w-full">Quick add:</p>
-            {[5, 10, 15, 20, 25].map(num => (
+          {/* Quick input suggestions */}
+          <div className="text-xs text-slate-500 space-y-1">
+            <p>Common combinations:</p>
+            <div className="flex gap-2 flex-wrap">
               <button
-                key={num}
-                onClick={() => {
-                  setInputValue(num.toString());
-                  setTimeout(() => handleAddResponse(), 50);
-                }}
-                className="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded transition-colors border border-slate-200"
+                onClick={() => { setInputApps('10'); setInputHours('3'); }}
+                className="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200"
               >
-                {num}
+                10 apps, 3h
               </button>
-            ))}
+              <button
+                onClick={() => { setInputApps('20'); setInputHours('5'); }}
+                className="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200"
+              >
+                20 apps, 5h
+              </button>
+              <button
+                onClick={() => { setInputApps('30'); setInputHours('8'); }}
+                className="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200"
+              >
+                30 apps, 8h
+              </button>
+            </div>
           </div>
           
           {studentCount > 0 && (
             <button
               onClick={() => {
-                setPollResponses({});
+                setPollResponses([]);
                 setStudentCount(0);
                 setLastAdded(null);
               }}
@@ -457,145 +473,137 @@ const OpeningPoll = ({ responses, setPollResponses }) => {
         </div>
       </div>
       
-      {/* Bar Chart */}
+      {/* Scatter Plot */}
       <div className={`bg-white p-6 rounded-2xl transition-all duration-500 border border-slate-200 shadow-lg ${
         totalResponses > 0 ? 'opacity-100' : 'opacity-60'
       }`}>
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="text-xl font-bold text-slate-900">Class App Usage Distribution</h3>
-            <p className="text-xs text-slate-500 mt-1">Y-axis: Number of Students (0-{yAxisMax}) | X-axis: Apps Used Yesterday</p>
+            <h3 className="text-xl font-bold text-slate-900">Apps vs. Screen Time Analysis</h3>
+            <p className="text-xs text-slate-500 mt-1">Each dot represents a student's app count and daily phone usage</p>
           </div>
           <div className="text-xs text-slate-500 space-y-1">
-            <p className="font-semibold mb-1">Bar Colors (by frequency):</p>
+            <p className="font-semibold mb-1">Insight Zones:</p>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-gradient-to-t from-blue-500 to-blue-300 rounded"></div>
-              <span>1-4 students</span>
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span>Low usage (< 3h)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-gradient-to-t from-green-500 to-green-300 rounded"></div>
-              <span>5-9 students</span>
+              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <span>Moderate (3-6h)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-gradient-to-t from-red-500 to-red-400 rounded"></div>
-              <span>10+ students</span>
+              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+              <span>High usage (> 6h)</span>
             </div>
           </div>
         </div>
-        <div className="overflow-x-auto">
-          <div className="min-w-[800px]">
-            {/* Y-axis labels */}
-            <div className="flex">
-              <div className="flex flex-col justify-between h-64 pr-3 text-xs text-slate-500 text-right w-8">
-                {Array.from({ length: 6 }).map((_, i) => {
-                  const value = i * yAxisMax / 5;
-                  return <span key={i}>{Math.round(value)}</span>;
-                })}
-              </div>
-              
-              {/* Chart area */}
-              <div className="flex-1 relative h-64">
-                {/* Grid lines */}
-                {Array.from({ length: 6 }).map((_, i) => {
-                  const val = i * yAxisMax / 5;
-                  return (
-                    <div
-                      key={val}
-                      className="absolute w-full border-t border-slate-200"
-                      style={{ bottom: `${yAxisMax > 0 ? (val / yAxisMax) * 100 : 0}%` }}
-                    />
-                  );
-                })}
-                  
-                {/* Bars */}
-                <div className="absolute bottom-0 left-0 right-0 top-0 flex items-end gap-1">
-                  {chartData.slice(0, 25).map((data) => (
-                    <div key={data.apps} className="flex-1 h-full flex flex-col items-center justify-end relative group">
-                      {/* Count label */}
-                      {data.count > 0 && (
-                        <>
-                          <span className={`absolute text-xs font-bold transition-all duration-300 z-10 ${
-                            lastAdded === data.apps ? 'text-red-500 scale-150 -top-7' : 
-                            data.apps == mode && modeCount >= 3 ? 'text-green-600 -top-5' : 'text-blue-600 scale-100 -top-5'
-                          }`}>
-                            {data.count}
-                          </span>
-                        </>
-                      )}
-                      
-                      {/* Bar */}
-                      <div
-                        className={`w-full rounded-t hover:opacity-80 hover:shadow-lg ${
-                          lastAdded === data.apps ? 'animate-pulse shadow-2xl' : 
-                          data.apps == mode && modeCount >= 3 ? 'ring-2 ring-green-500' : ''
-                        } ${
-                          data.count >= 10
-                            ? 'bg-gradient-to-t from-red-500 to-red-400' 
-                            : data.count >= 5 
-                            ? 'bg-gradient-to-t from-green-500 to-green-300'
-                            : 'bg-gradient-to-t from-blue-500 to-blue-300'
-                        }`}
-                        style={{ 
-                          height: `${yAxisMax > 0 ? (data.count / yAxisMax) * chartHeight : 0}px`,
-                          minHeight: data.count > 0 ? '4px' : '0px',
-                          boxShadow: lastAdded === data.apps ? '0 0 20px rgba(239, 68, 68, 0.5)' : '',
-                          transform: lastAdded === data.apps ? 'scaleY(1.05)' : 'scaleY(1)',
-                          transformOrigin: 'bottom',
-                          transition: 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)'
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-                
-                {totalResponses === 0 && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-slate-50/80 rounded">
-                    <p className="text-slate-500 text-lg font-semibold">Start adding student responses to see the distribution!</p>
-                  </div>
-                )}
-              </div>
-            </div>
-             {/* X-axis labels */}
-            <div className="flex mt-2 ml-8">
-                <div className="flex flex-1 gap-1 text-xs text-slate-500">
-                    {chartData.slice(0, 25).map((data) => (
-                    <div key={data.apps} className="flex-1 text-center">
-                        {data.apps}
-                    </div>
-                    ))}
-                </div>
-            </div>
-            <div className="text-center mt-2 text-sm text-slate-500">Number of Apps Used</div>
+        <div className="relative h-96 mt-4">
+          {/* Y-axis labels (Hours) */}
+          <div className="absolute left-0 top-0 bottom-8 w-12 flex flex-col justify-between text-xs text-slate-500 text-right pr-2">
+            {[24, 20, 16, 12, 8, 4, 0].map(hour => (
+              <span key={hour}>{hour}h</span>
+            ))}
           </div>
+          
+          {/* Scatter plot area */}
+          <div className="ml-12 mb-8 relative h-full bg-slate-50 rounded-lg border border-slate-200">
+            {/* Grid lines */}
+            {[0, 4, 8, 12, 16, 20, 24].map(hour => (
+              <div
+                key={hour}
+                className="absolute w-full border-t border-slate-200"
+                style={{ bottom: `${(hour / 24) * 100}%` }}
+              />
+            ))}
+            {[0, 10, 20, 30, 40, 50].map(apps => (
+              <div
+                key={apps}
+                className="absolute h-full border-l border-slate-200"
+                style={{ left: `${(apps / 50) * 100}%` }}
+              />
+            ))}
+            
+            {/* Plot points */}
+            {responses.map((response, index) => {
+              const x = (response.apps / 50) * 100;
+              const y = (response.hours / 24) * 100;
+              const isNew = lastAdded && lastAdded.apps === response.apps && lastAdded.hours === response.hours;
+              const color = response.hours < 3 ? 'bg-green-500' : response.hours < 6 ? 'bg-yellow-500' : 'bg-red-500';
+              
+              return (
+                <div
+                  key={response.id}
+                  className={`absolute w-3 h-3 rounded-full ${color} transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500 hover:scale-150 cursor-pointer ${
+                    isNew ? 'animate-pulse scale-150 ring-4 ring-offset-2 ring-blue-400' : ''
+                  }`}
+                  style={{
+                    left: `${x}%`,
+                    bottom: `${y}%`,
+                    zIndex: isNew ? 20 : 10
+                  }}
+                  title={`Apps: ${response.apps}, Hours: ${response.hours}`}
+                />
+              );
+            })}
+            
+            {/* Insight zones overlay */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-0 left-0 right-0 h-1/4 bg-red-500 opacity-5" />
+              <div className="absolute top-1/4 left-0 right-0 h-1/4 bg-yellow-500 opacity-5" />
+              <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-green-500 opacity-5" />
+            </div>
+            
+            {totalResponses === 0 && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded">
+                <p className="text-slate-500 text-lg font-semibold">Start adding student data to see the correlation!</p>
+              </div>
+            )}
+          </div>
+          
+          {/* X-axis labels (Apps) */}
+          <div className="ml-12 flex justify-between text-xs text-slate-500 mt-2">
+            {[0, 10, 20, 30, 40, 50].map(apps => (
+              <span key={apps}>{apps}</span>
+            ))}
+          </div>
+          <div className="text-center mt-2 text-sm text-slate-500">Number of Apps Used</div>
+          <div className="absolute -left-8 top-1/2 transform -rotate-90 text-sm text-slate-500">Hours on Phone</div>
         </div>
       </div>
       
       {/* Stats Cards */}
       {totalResponses > 0 && (
         <div className="space-y-4">
-          <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             <div className="bg-white p-4 rounded-xl text-center border border-slate-200 shadow-sm">
               <p className="text-3xl font-bold text-blue-600">{averageApps}</p>
-              <p className="text-sm text-slate-600">Average Apps Per Student</p>
+              <p className="text-sm text-slate-600">Avg Apps/Student</p>
             </div>
             <div className="bg-white p-4 rounded-xl text-center border border-slate-200 shadow-sm">
-              <p className="text-3xl font-bold text-blue-600">{totalApps}</p>
-              <p className="text-sm text-slate-600">Total Apps Used by Class</p>
+              <p className="text-3xl font-bold text-purple-600">{averageHours}h</p>
+              <p className="text-sm text-slate-600">Avg Screen Time</p>
             </div>
             <div className="bg-white p-4 rounded-xl text-center border border-slate-200 shadow-sm">
-              <p className="text-3xl font-bold text-blue-600">{Object.keys(responses).length > 0 ? Math.max(...Object.keys(responses).map(Number)) : 0}</p>
-              <p className="text-sm text-slate-600">Most Apps by One Student</p>
+              <p className="text-3xl font-bold text-red-600">{highUsageStudents}</p>
+              <p className="text-sm text-slate-600">Heavy Users (>5h)</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl text-center border border-slate-200 shadow-sm">
+              <p className="text-3xl font-bold text-green-600">{multiAppUsers}</p>
+              <p className="text-sm text-slate-600">Multi-App Users (>15)</p>
             </div>
           </div>
           
-          {totalResponses >= 10 && modeCount >= 3 && (
+          {totalResponses >= 10 && (
             <div className="text-center space-y-2">
               <p className="text-sm text-slate-500">
-                💡 Pattern emerging: {modeCount} students ({Math.round((modeCount/totalResponses)*100)}%) use exactly {mode} apps daily!
+                💡 Insight: {Math.round((highUsageStudents/totalResponses)*100)}% of students spend over 5 hours daily on their phones!
               </p>
-              <p className="text-xs text-slate-400">
-                (Most common value highlighted with green ring)
-              </p>
+              {averageHours > 5 && (
+                <p className="text-xs text-red-600 font-semibold">
+                  ⚠️ Class average exceeds recommended screen time limits
+                </p>
+              )}
             </div>
           )}
         </div>

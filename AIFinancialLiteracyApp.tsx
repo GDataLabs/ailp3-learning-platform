@@ -278,22 +278,27 @@ const TitleSlide = ({ onStart }) => {
 };
 
 
-// Component for Opening Poll
+// Component for Opening Poll - Enhanced with 2D tracking
 const OpeningPoll = ({ responses, setPollResponses }) => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputApps, setInputApps] = useState('');
+  const [inputHours, setInputHours] = useState('');
   const [studentCount, setStudentCount] = useState(0);
   const [lastAdded, setLastAdded] = useState(null);
+  const [viewMode, setViewMode] = useState('scatter'); // 'scatter' or 'heatmap'
   
   const handleAddResponse = () => {
-    const num = parseInt(inputValue);
-    if (!isNaN(num) && num >= 0 && num <= 50) {
+    const apps = parseInt(inputApps);
+    const hours = parseFloat(inputHours);
+    if (!isNaN(apps) && apps >= 0 && apps <= 50 && !isNaN(hours) && hours >= 0 && hours <= 24) {
+      const key = `${apps}_${hours}`;
       setPollResponses(prev => ({
         ...prev,
-        [num]: (prev[num] || 0) + 1
+        [key]: (prev[key] || 0) + 1
       }));
       setStudentCount(prev => prev + 1);
-      setLastAdded(num);
-      setInputValue('');
+      setLastAdded(key);
+      setInputApps('');
+      setInputHours('');
       
       // Reset highlight after animation
       setTimeout(() => setLastAdded(null), 1500);
@@ -308,30 +313,49 @@ const OpeningPoll = ({ responses, setPollResponses }) => {
   
   // Calculate stats
   const totalResponses = Object.values(responses).reduce((sum, count) => sum + count, 0);
-  const totalApps = Object.entries(responses).reduce((sum, [apps, count]) => sum + (parseInt(apps) * count), 0);
-  const averageApps = totalResponses > 0 ? (totalApps / totalResponses).toFixed(1) : 0;
   
-  // Find mode (most common number of apps)
-  const mode = Object.entries(responses).reduce((max, [apps, count]) => 
-    count > (responses[max] || 0) ? apps : max, '0'
+  // Parse responses to calculate separate stats
+  const parsedResponses = Object.entries(responses).map(([key, count]) => {
+    const [apps, hours] = key.split('_').map(Number);
+    return { apps, hours, count };
+  });
+  
+  const totalApps = parsedResponses.reduce((sum, item) => sum + (item.apps * item.count), 0);
+  const totalHours = parsedResponses.reduce((sum, item) => sum + (item.hours * item.count), 0);
+  const averageApps = totalResponses > 0 ? (totalApps / totalResponses).toFixed(1) : 0;
+  const averageHours = totalResponses > 0 ? (totalHours / totalResponses).toFixed(1) : 0;
+  
+  // Find mode (most common combination)
+  const mode = Object.entries(responses).reduce((max, [key, count]) => 
+    count > (responses[max] || 0) ? key : max, '0_0'
   );
   const modeCount = responses[mode] || 0;
+  const [modeApps, modeHours] = mode.split('_').map(Number);
   
-  // Create array for bar chart (0-30 apps)
-  const chartData = Array.from({ length: 31 }, (_, i) => ({
-    apps: i,
-    count: responses[i] || 0
-  }));
+  // Create scatter plot data
+  const scatterData = parsedResponses.filter(item => item.count > 0);
+  
+  // Create heatmap data (grid of apps vs hours)
+  const heatmapData = [];
+  for (let hours = 0; hours <= 12; hours += 0.5) {
+    for (let apps = 0; apps <= 30; apps++) {
+      const key = `${apps}_${hours}`;
+      heatmapData.push({
+        apps,
+        hours,
+        count: responses[key] || 0
+      });
+    }
+  }
 
   // Find the max count for dynamic scaling
   const maxCount = Math.max(0, ...Object.values(responses));
-  const yAxisMax = Math.max(10, Math.ceil(maxCount / 5) * 5); // Ensure a minimum axis of 10, and round up to nearest 5
-  const chartHeight = 256; // Corresponds to h-64 (16rem * 16px/rem)
+  const maxRadius = 30; // Maximum radius for scatter plot circles
   
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
-        <p className="text-2xl mb-4 text-slate-700">📱 Let's see how many apps utilize your data.</p>
+        <p className="text-2xl mb-4 text-slate-700">📱 Let's explore app usage and screen time together!</p>
         <div className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-full border border-slate-200 shadow-sm">
           <Sparkles className="w-5 h-5 text-blue-500" />
           <span className="text-lg text-slate-700">Real-time class data visualization</span>
@@ -342,7 +366,7 @@ const OpeningPoll = ({ responses, setPollResponses }) => {
       <div className="max-w-md mx-auto mb-8">
         <div className="bg-white p-6 rounded-2xl space-y-4 border border-slate-200 shadow-lg">
           <h3 className="text-lg font-bold text-slate-900">Ask Each Student:</h3>
-          <p className="text-slate-600">"How many different apps did you use yesterday?"</p>
+          <p className="text-slate-600">"How many apps did you use yesterday, and how many hours did you spend on them?"</p>
           
           <div className="flex gap-2">
             <input
