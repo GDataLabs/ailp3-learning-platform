@@ -316,7 +316,7 @@ const TitleSlide = ({ onStart }) => {
                 <div className="mt-8 bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg max-w-2xl mx-auto">
                     <h3 className="text-lg font-bold mb-4 text-slate-800">Welcome to AI Financial Literacy</h3>
                     <video 
-                        src="AILP3_intro.mp4"
+                        src="AILP3_intro_new.mp4"
                         controls
                         className="w-full rounded-lg"
                         preload="metadata"
