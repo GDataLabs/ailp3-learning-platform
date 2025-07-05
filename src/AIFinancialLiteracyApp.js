@@ -1317,8 +1317,6 @@ const ClosingModule = ({ pledgeData, setPledgeData, finalWords, setFinalWords })
           </div>
         </div>
         
-        <Quote text="The future depends on what you do today." author="Mahatma Gandhi" />
-
         <div className="mt-12 bg-white p-6 rounded-2xl shadow-lg max-w-md mx-auto border border-slate-200">
           <h3 className="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
             <Music className="w-5 h-5 text-blue-500" />
@@ -1333,6 +1331,8 @@ const ClosingModule = ({ pledgeData, setPledgeData, finalWords, setFinalWords })
             Your browser does not support the audio element.
           </audio>
         </div>
+        
+        <Quote text="The future depends on what you do today." author="Mahatma Gandhi" />
       </div>
     </div>
   );
