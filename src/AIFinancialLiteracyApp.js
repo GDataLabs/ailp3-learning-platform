@@ -174,12 +174,12 @@ const AIFinancialLiteracyApp = () => {
           {/* Group 2: Edition, Progress Dots. This will be the bottom element on mobile. */}
           <div className="flex items-center self-end sm:self-center gap-4">
             <div className="text-sm text-slate-500 hidden md:block">Atlanta High School Edition</div>
-            <div className="flex gap-1.5">
+            <div className="flex gap-1.5 bg-slate-100 p-2 rounded-lg">
               {slides.map((_, index) => (
                 <div
                   key={index}
                   className={`h-2 transition-all duration-300 rounded-full ${
-                    index === currentSlide ? 'w-8 bg-blue-500' : 'w-2 bg-slate-500'
+                    index === currentSlide ? 'w-8 bg-blue-500' : 'w-2 bg-slate-400'
                   }`}
                 />
               ))}
