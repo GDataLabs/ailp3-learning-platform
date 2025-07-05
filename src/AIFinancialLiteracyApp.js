@@ -1251,63 +1251,6 @@ const ClosingModule = ({ pledgeData, setPledgeData, finalWords, setFinalWords })
           </label>
         </div>
         
-        {/* Data Dignity Meter */}
-        <div className="mt-8 mb-6">
-          <div className="text-center mb-4">
-            <h3 className="text-xl font-bold text-slate-800 mb-2">Data Dignity Meter</h3>
-            <p className="text-sm text-slate-600">Complete your goals to fill up your dignity fuel!</p>
-          </div>
-          <div className="relative w-48 h-48 mx-auto">
-            {/* Fuel Tank Outline */}
-            <div className="absolute inset-0 border-4 border-slate-400 rounded-2xl bg-slate-100">
-              {/* Fuel Level */}
-              <div 
-                className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-green-400 via-yellow-400 to-red-400 rounded-xl transition-all duration-700 ease-out"
-                style={{ 
-                  height: `${(() => {
-                    const fields = [pledgeData.tool, pledgeData.goal, pledgeData.teach];
-                    const completedFields = fields.filter(field => field.trim() !== '').length;
-                    return (completedFields / fields.length) * 100;
-                  })()}%` 
-                }}
-              ></div>
-              {/* Gauge Markings */}
-              <div className="absolute inset-2 pointer-events-none">
-                <div className="absolute top-1/4 left-0 w-4 h-0.5 bg-slate-600"></div>
-                <div className="absolute top-1/2 left-0 w-6 h-0.5 bg-slate-600"></div>
-                <div className="absolute top-3/4 left-0 w-4 h-0.5 bg-slate-600"></div>
-                <div className="absolute top-1/4 right-0 w-4 h-0.5 bg-slate-600"></div>
-                <div className="absolute top-1/2 right-0 w-6 h-0.5 bg-slate-600"></div>
-                <div className="absolute top-3/4 right-0 w-4 h-0.5 bg-slate-600"></div>
-              </div>
-              {/* Percentage Display */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg shadow-md">
-                  <span className="text-lg font-bold text-slate-800">
-                    {(() => {
-                      const fields = [pledgeData.tool, pledgeData.goal, pledgeData.teach];
-                      const completedFields = fields.filter(field => field.trim() !== '').length;
-                      return Math.round((completedFields / fields.length) * 100);
-                    })()}%
-                  </span>
-                </div>
-              </div>
-            </div>
-            {/* Tank Cap */}
-            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-4 bg-slate-500 rounded-t-lg border-2 border-slate-600"></div>
-          </div>
-          <div className="text-center mt-4">
-            <p className="text-sm text-slate-600">
-              {(() => {
-                const fields = [pledgeData.tool, pledgeData.goal, pledgeData.teach];
-                const completedFields = fields.filter(field => field.trim() !== '').length;
-                const total = fields.length;
-                return `${completedFields} of ${total} goals completed`;
-              })()}
-            </p>
-          </div>
-        </div>
-        
         {Object.values(pledgeData).every(val => val.trim()) && (
           <div className="bg-gradient-to-r from-green-500 to-blue-500 p-0.5 rounded-2xl shadow-md">
             <div className="bg-white p-4 rounded-2xl">
@@ -1349,6 +1292,78 @@ const ClosingModule = ({ pledgeData, setPledgeData, finalWords, setFinalWords })
               {word}
             </span>
           ))}
+        </div>
+      </div>
+      
+      {/* Data Dignity Meter */}
+      <div className="mt-8 mb-6">
+        <div className="text-center mb-4">
+          <h3 className="text-xl font-bold text-slate-800 mb-2">Data Dignity Meter</h3>
+          <p className="text-sm text-slate-600">Complete your pledge and add to the declaration to fill up your dignity fuel!</p>
+        </div>
+        <div className="relative w-48 h-48 mx-auto">
+          {/* Fuel Tank Outline */}
+          <div className="absolute inset-0 border-4 border-slate-400 rounded-2xl bg-slate-100">
+            {/* Fuel Level */}
+            <div 
+              className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-green-400 via-yellow-400 to-red-400 rounded-xl transition-all duration-700 ease-out"
+              style={{ 
+                height: `${(() => {
+                  const pledgeFields = [pledgeData.tool, pledgeData.goal, pledgeData.teach];
+                  const completedPledge = pledgeFields.filter(field => field.trim() !== '').length;
+                  const pledgePoints = (completedPledge / pledgeFields.length) * 75; // 75% for pledge
+                  const declarationPoints = finalWords.length > 0 ? 25 : 0; // 25% for declaration
+                  return Math.min(pledgePoints + declarationPoints, 100);
+                })()}%` 
+              }}
+            ></div>
+            {/* Gauge Markings */}
+            <div className="absolute inset-2 pointer-events-none">
+              <div className="absolute top-1/4 left-0 w-4 h-0.5 bg-slate-600"></div>
+              <div className="absolute top-1/2 left-0 w-6 h-0.5 bg-slate-600"></div>
+              <div className="absolute top-3/4 left-0 w-4 h-0.5 bg-slate-600"></div>
+              <div className="absolute top-1/4 right-0 w-4 h-0.5 bg-slate-600"></div>
+              <div className="absolute top-1/2 right-0 w-6 h-0.5 bg-slate-600"></div>
+              <div className="absolute top-3/4 right-0 w-4 h-0.5 bg-slate-600"></div>
+            </div>
+            {/* Percentage Display */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg shadow-md">
+                <span className="text-lg font-bold text-slate-800">
+                  {(() => {
+                    const pledgeFields = [pledgeData.tool, pledgeData.goal, pledgeData.teach];
+                    const completedPledge = pledgeFields.filter(field => field.trim() !== '').length;
+                    const pledgePoints = (completedPledge / pledgeFields.length) * 75;
+                    const declarationPoints = finalWords.length > 0 ? 25 : 0;
+                    return Math.round(Math.min(pledgePoints + declarationPoints, 100));
+                  })()}%
+                </span>
+              </div>
+            </div>
+          </div>
+          {/* Tank Cap */}
+          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-4 bg-slate-500 rounded-t-lg border-2 border-slate-600"></div>
+        </div>
+        <div className="text-center mt-4 space-y-1">
+          <p className="text-sm text-slate-600">
+            {(() => {
+              const pledgeFields = [pledgeData.tool, pledgeData.goal, pledgeData.teach];
+              const completedPledge = pledgeFields.filter(field => field.trim() !== '').length;
+              const hasDeclaration = finalWords.length > 0;
+              return `Pledge: ${completedPledge}/3 • Declaration: ${hasDeclaration ? '✓' : '✗'}`;
+            })()}
+          </p>
+          <div className="flex gap-4 justify-center text-xs text-slate-500">
+            <button
+              onClick={() => {
+                setPledgeData({ tool: '', goal: '', teach: '' });
+                setFinalWords([]);
+              }}
+              className="px-3 py-1 bg-slate-200 rounded-lg hover:bg-slate-300 transition-colors"
+            >
+              Clear & Next Student
+            </button>
+          </div>
         </div>
       </div>
       
