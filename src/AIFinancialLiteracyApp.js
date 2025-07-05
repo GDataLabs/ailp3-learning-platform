@@ -179,7 +179,7 @@ const AIFinancialLiteracyApp = () => {
                 <div
                   key={index}
                   className={`h-2 transition-all duration-300 rounded-full ${
-                    index === currentSlide ? 'w-8 bg-blue-500' : 'w-2 bg-slate-300'
+                    index === currentSlide ? 'w-8 bg-blue-500' : 'w-2 bg-slate-500'
                   }`}
                 />
               ))}
