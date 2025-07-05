@@ -305,8 +305,8 @@ const TitleSlide = ({ onStart }) => {
                 <div className="w-full max-w-4xl mt-6 overflow-hidden relative bg-white rounded-2xl p-6 shadow-lg">
                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/0 to-white/0 z-10"></div>
                     <div className="flex animate-scroll">
-                        {[...logos, ...logos].map((logo, index) => (
-                            <div key={index} className="flex-shrink-0 w-48 mx-8">
+                        {[...logos, ...logos, ...logos].map((logo, index) => (
+                            <div key={index} className="flex-shrink-0 w-48 mx-6">
                                 <img src={logo.src} alt={logo.name} className="h-16 object-contain mx-auto" />
                             </div>
                         ))}
@@ -1417,11 +1417,11 @@ style.textContent = `
 
   @keyframes scroll {
     from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    to { transform: translateX(-33.333%); }
   }
 
   .animate-scroll {
-    animation: scroll 40s linear infinite;
+    animation: scroll 50s linear infinite;
   }
 
   .perspective-1000 { perspective: 1000px; }
