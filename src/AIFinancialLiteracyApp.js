@@ -652,22 +652,11 @@ const DataDollarsModule = ({ setUserDataValue, userDataValue }) => {
     <div className="space-y-12">
       <div className="space-y-6">
         <h3 className="text-2xl font-bold text-center text-slate-800">See How Your Data Creates Value</h3>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="max-w-4xl mx-auto">
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
-            <h4 className="text-lg font-bold mb-4 text-slate-700">Understanding Your App Value</h4>
+            <h4 className="text-lg font-bold mb-4 text-slate-700 text-center">Understanding App Value & The Data Economy</h4>
             <video 
-              src="app_value_videos/app_value_1.mp4"
-              controls
-              className="w-full rounded-lg"
-              preload="metadata"
-            >
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
-            <h4 className="text-lg font-bold mb-4 text-slate-700">The Data Economy Explained</h4>
-            <video 
-              src="app_value_videos/app_value_2.mp4"
+              src="app_value_videos/app_value_combined.mp4"
               controls
               className="w-full rounded-lg"
               preload="metadata"
