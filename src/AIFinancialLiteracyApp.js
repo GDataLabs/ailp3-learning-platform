@@ -486,7 +486,7 @@ const OpeningPoll = ({ responses, setPollResponses }) => {
             <p className="font-semibold mb-1">Insight Zones:</p>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span>Low usage (< 3h)</span>
+              <span>Low usage (&lt; 3h)</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
