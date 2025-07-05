@@ -194,7 +194,7 @@ const AIFinancialLiteracyApp = () => {
         <div className="max-w-7xl mx-auto">
           <div className={`bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-xl min-h-[600px] border border-slate-200 ${currentSlide === 0 ? 'bg-transparent shadow-none border-none' : ''}`}>
              {currentSlide > 0 && (
-                <h2 className="text-4xl font-bold mb-8 text-center text-slate-800">
+                <h2 className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-400 bg-clip-text text-transparent">
                 {slides[currentSlide].title}
                 </h2>
             )}
