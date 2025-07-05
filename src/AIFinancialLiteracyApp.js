@@ -1306,7 +1306,7 @@ const ClosingModule = ({ pledgeData, setPledgeData, finalWords, setFinalWords })
           <div className="absolute inset-0 border-4 border-slate-400 rounded-2xl bg-slate-100">
             {/* Fuel Level */}
             <div 
-              className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-green-400 via-yellow-400 to-red-400 rounded-xl transition-all duration-700 ease-out"
+              className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-blue-600 via-cyan-500 to-blue-400 rounded-xl transition-all duration-700 ease-out"
               style={{ 
                 height: `${(() => {
                   const pledgeFields = [pledgeData.tool, pledgeData.goal, pledgeData.teach];
