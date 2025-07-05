@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        'scroll': 'scroll 35s linear infinite',
+        'scroll': 'scroll 25s linear infinite',
       },
       keyframes: {
         scroll: {
