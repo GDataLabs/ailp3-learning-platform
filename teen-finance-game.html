@@ -30,13 +30,12 @@
             box-shadow: 0 0 40px rgba(52, 152, 219, 0.5);
             border: 5px solid #34495e;
             max-width: 95%;
+            position: relative;
         }
         
         canvas {
             border: 4px solid #34495e;
             image-rendering: pixelated;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: crisp-edges;
             cursor: pointer;
             background-color: #000;
             max-width: 100%;
@@ -51,6 +50,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
             gap: 15px;
         }
         
@@ -88,15 +88,9 @@
             line-height: 1.5;
         }
         
-        .good {
-            color: #27ae60 !important;
-            text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
-        }
-        
-        .bad {
-            color: #e74c3c !important;
-            text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
-        }
+        .good { color: #27ae60 !important; text-shadow: 1px 1px 0px rgba(0,0,0,0.2); }
+        .bad { color: #e74c3c !important; text-shadow: 1px 1px 0px rgba(0,0,0,0.2); }
+
     </style>
 </head>
 <body>
@@ -117,29 +111,21 @@
         ctx.imageSmoothingEnabled = false;
         
         // --- Game State Variables ---
-        let gameState = 'characterSelect'; // 'characterSelect', 'room', 'gameOver'
+        let gameState = 'characterSelect';
         let selectedCharacter = null;
-        let money = 100;
-        let score = 0;
-        let day = 1;
+        let money = 100, score = 0, day = 1;
         let currentChoice = null;
-        
-        // --- Character Animation & Position ---
-        let characterX = 280;
-        let characterY = 300;
-        let targetX = 280;
-        let targetY = 300;
-        let isMoving = false;
-        let walkFrame = 0;
-        let walkFrameCounter = 0;
-        let pendingObject = null; // Object to interact with after moving
+        let isMoving = false, walkFrame = 0, walkFrameCounter = 0;
+        let characterX = 280, characterY = 300;
+        let targetX = 280, targetY = 300;
+        let pendingObject = null;
         
         // --- Interactive Objects Data ---
         const objects = [
             {
                 x: 100, y: 200, width: 80, height: 100, name: 'Computer',
                 choices: [
-                    { text: 'Learn about investing online (Free)', money: 0, score: 10, message: 'Great! You learned about compound interest and index funds!' },
+                    { text: 'Learn about investing online', money: 0, score: 10, message: 'Great! You learned about compound interest and index funds!' },
                     { text: 'Buy expensive gaming gear ($80)', money: -80, score: -5, message: 'The gaming gear is fun but that was most of your money...' }
                 ]
             },
@@ -160,213 +146,113 @@
             {
                 x: 200, y: 350, width: 80, height: 60, name: 'Phone',
                 choices: [
-                    { text: 'Buy expensive mobile game items ($30)', money: -30, score: -8, message: 'In-app purchases add up quickly! Be careful with digital spending.' },
+                    { text: 'Buy mobile game items ($30)', money: -30, score: -8, message: 'In-app purchases add up quickly! Be careful with digital spending.' },
                     { text: 'Learn about budgeting apps', money: 0, score: 15, message: 'Smart move! Budgeting apps help track spending and save money.'}
                 ]
             }
         ];
         
         // --- Drawing Functions ---
-
-        /**
-         * Draws a pixel art character on the canvas.
-         * @param {number} x - The x-coordinate of the character.
-         * @param {number} y - The y-coordinate of the character.
-         * @param {string} type - 'boy' or 'girl'.
-         * @param {number} scale - The scale of the character sprite.
-         * @param {number} frame - The current animation frame for walking.
-         */
         function drawCharacter(x, y, type, scale = 1, frame = 0) {
             const size = 8 * scale;
-            
-            // Shadow
             ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
             ctx.beginPath();
-            // FIX: Added missing arguments (rotation, startAngle, endAngle) to ellipse function
             ctx.ellipse(x + size * 4, y + size * 8, size * 2.5, size * 0.5, 0, 0, 2 * Math.PI);
             ctx.fill();
-            
-            // Head
-            ctx.fillStyle = '#8d5524'; // Skin tone
+            ctx.fillStyle = '#8d5524';
             ctx.fillRect(x + size * 3, y + size, size * 2, size * 2);
-            
-            // Hair
-            ctx.fillStyle = '#2d1b00'; // Hair color
+            ctx.fillStyle = '#2d1b00';
             if (type === 'boy') {
                 ctx.fillRect(x + size * 2.5, y, size * 3, size * 1.5);
                 ctx.fillRect(x + size * 3, y + size * 0.5, size * 2, size);
             } else {
-                ctx.fillRect(x + size * 2, y, size * 1.5, size * 2); // Left puff
-                ctx.fillRect(x + size * 4.5, y, size * 1.5, size * 2); // Right puff
+                ctx.fillRect(x + size * 2, y, size * 1.5, size * 2);
+                ctx.fillRect(x + size * 4.5, y, size * 1.5, size * 2);
                 ctx.fillRect(x + size * 3, y + size * 0.5, size * 2, size);
-                ctx.fillStyle = '#ff69b4'; // Ribbons
+                ctx.fillStyle = '#ff69b4';
                 ctx.fillRect(x + size * 2.5, y + size * 1.5, size * 0.5, size * 0.5);
                 ctx.fillRect(x + size * 5, y + size * 1.5, size * 0.5, size * 0.5);
             }
-            
-            // Eyes
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(x + size * 3.2, y + size * 1.3, size * 0.6, size * 0.4);
             ctx.fillRect(x + size * 4.2, y + size * 1.3, size * 0.6, size * 0.4);
             ctx.fillStyle = '#000000';
             ctx.fillRect(x + size * 3.4, y + size * 1.4, size * 0.3, size * 0.3);
             ctx.fillRect(x + size * 4.4, y + size * 1.4, size * 0.3, size * 0.3);
-            
-            // Body - shirt
-            ctx.fillStyle = type === 'boy' ? '#4169e1' : '#ff69b4'; // Shirt color
+            ctx.fillStyle = type === 'boy' ? '#4169e1' : '#ff69b4';
             ctx.fillRect(x + size * 2, y + size * 3, size * 4, size * 3);
-            
-            // Arms
-            ctx.fillStyle = '#8d5524'; // Skin tone
+            ctx.fillStyle = '#8d5524';
             const armSway = isMoving ? Math.sin(frame * 5) * size * 0.3 : 0;
             ctx.fillRect(x + size * 1.5, y + size * 3 + armSway, size * 0.5, size * 2);
             ctx.fillRect(x + size * 6, y + size * 3 - armSway, size * 0.5, size * 2);
-            
-            // Pants
             ctx.fillStyle = '#2c3e50';
             ctx.fillRect(x + size * 2, y + size * 6, size * 4, size * 1.5);
-            
-            // Legs with walking animation
             const legMove1 = isMoving ? Math.sin(frame * 5) * size * 0.5 : 0;
             const legMove2 = isMoving ? Math.sin(frame * 5 + Math.PI) * size * 0.5 : 0;
             ctx.fillRect(x + size * 2.5, y + size * 7.5, size * 1.3, size * 1.5 + legMove1);
             ctx.fillRect(x + size * 4.2, y + size * 7.5, size * 1.3, size * 1.5 + legMove2);
         }
         
-        /**
-         * Draws the main game room with all its objects.
-         */
         function drawRoom() {
-            // Background
-            ctx.fillStyle = '#e8dcc6'; // Wall color
-            ctx.fillRect(0, 0, canvas.width, 380);
-            ctx.fillStyle = '#d4a574'; // Floor color
-            ctx.fillRect(0, 380, canvas.width, 100);
-             // Baseboard
-            ctx.fillStyle = '#8b6f47';
-            ctx.fillRect(0, 370, canvas.width, 10);
-
-            // Window
-            ctx.fillStyle = '#87ceeb';
-            ctx.fillRect(250, 50, 140, 100);
-            ctx.strokeStyle = '#8b6f47';
-            ctx.lineWidth = 4;
+            ctx.fillStyle = '#e8dcc6'; ctx.fillRect(0, 0, canvas.width, 380);
+            ctx.fillStyle = '#d4a574'; ctx.fillRect(0, 380, canvas.width, 100);
+            ctx.fillStyle = '#8b6f47'; ctx.fillRect(0, 370, canvas.width, 10);
+            ctx.fillStyle = '#87ceeb'; ctx.fillRect(250, 50, 140, 100);
+            ctx.strokeStyle = '#8b6f47'; ctx.lineWidth = 4;
             ctx.strokeRect(250, 50, 140, 100);
-            ctx.beginPath();
-            ctx.moveTo(320, 50); ctx.lineTo(320, 150);
-            ctx.moveTo(250, 100); ctx.lineTo(390, 100);
-            ctx.stroke();
-            
-            // Draw objects
+            ctx.beginPath(); ctx.moveTo(320, 50); ctx.lineTo(320, 150);
+            ctx.moveTo(250, 100); ctx.lineTo(390, 100); ctx.stroke();
             objects.forEach(obj => {
-                // Simple object representation
-                ctx.fillStyle = '#a0a0a0';
-                ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
-                ctx.strokeStyle = '#505050';
-                ctx.strokeRect(obj.x, obj.y, obj.width, obj.height);
-
-                // Object labels
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-                ctx.fillRect(obj.x - 10, obj.y - 25, obj.width + 20, 20);
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '12px "Press Start 2P"';
-                ctx.textAlign = 'center';
-                ctx.fillText(obj.name, obj.x + obj.width/2, obj.y - 10);
+                ctx.fillStyle = '#a0a0a0'; ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+                ctx.strokeStyle = '#505050'; ctx.strokeRect(obj.x, obj.y, obj.width, obj.height);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; ctx.fillRect(obj.x - 10, obj.y - 25, obj.width + 20, 20);
+                ctx.fillStyle = '#ffffff'; ctx.font = '12px "Press Start 2P"';
+                ctx.textAlign = 'center'; ctx.fillText(obj.name, obj.x + obj.width/2, obj.y - 10);
             });
-            
-            // Draw character in room
             if (selectedCharacter) {
                 drawCharacter(characterX, characterY, selectedCharacter, 2.5, walkFrame);
             }
         }
         
-        /**
-         * Draws the initial character selection screen.
-         */
         function drawCharacterSelect() {
             const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            gradient.addColorStop(0, '#3498db');
-            gradient.addColorStop(1, '#2c3e50');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Title
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '32px "Press Start 2P"';
-            ctx.textAlign = 'center';
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-            ctx.shadowBlur = 5;
-            ctx.fillText('MONEY MOVES', canvas.width/2, 70);
-            ctx.font = '18px "Press Start 2P"';
-            ctx.fillText('Teen Finance Quest', canvas.width/2, 105);
-            ctx.shadowBlur = 0;
-            
-            ctx.font = '16px "Press Start 2P"';
+            gradient.addColorStop(0, '#3498db'); gradient.addColorStop(1, '#2c3e50');
+            ctx.fillStyle = gradient; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff'; ctx.font = '32px "Press Start 2P"';
+            ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            ctx.shadowBlur = 5; ctx.fillText('MONEY MOVES', canvas.width/2, 70);
+            ctx.font = '18px "Press Start 2P"'; ctx.fillText('Teen Finance Quest', canvas.width/2, 105);
+            ctx.shadowBlur = 0; ctx.font = '16px "Press Start 2P"';
             ctx.fillText('Choose Your Character', canvas.width/2, 160);
-            
-            // Character panels
             const panelY = 200, panelHeight = 200, panelWidth = 160;
-            
-            // Boy panel
-            ctx.fillStyle = '#ecf0f1';
-            ctx.fillRect(140, panelY, panelWidth, panelHeight);
-            ctx.strokeStyle = '#34495e';
-            ctx.lineWidth = 4;
+            ctx.fillStyle = '#ecf0f1'; ctx.fillRect(140, panelY, panelWidth, panelHeight);
+            ctx.strokeStyle = '#34495e'; ctx.lineWidth = 4;
             ctx.strokeRect(140, panelY, panelWidth, panelHeight);
             drawCharacter(170, panelY + 40, 'boy', 3, 0);
-            ctx.fillStyle = '#2c3e50';
-            ctx.font = '18px "Press Start 2P"';
+            ctx.fillStyle = '#2c3e50'; ctx.font = '18px "Press Start 2P"';
             ctx.fillText('Alex', 140 + panelWidth/2, panelY + panelHeight - 18);
-
-            // Girl panel
-            ctx.fillStyle = '#ecf0f1';
-            ctx.fillRect(340, panelY, panelWidth, panelHeight);
+            ctx.fillStyle = '#ecf0f1'; ctx.fillRect(340, panelY, panelWidth, panelHeight);
             ctx.strokeRect(340, panelY, panelWidth, panelHeight);
             drawCharacter(370, panelY + 40, 'girl', 3, 0);
             ctx.fillStyle = '#2c3e50';
             ctx.fillText('Maya', 340 + panelWidth/2, panelY + panelHeight - 18);
         }
         
-        /**
-         * Draws the dialog box for making a choice.
-         */
         function drawChoiceDialog() {
             if (!currentChoice) return;
-            
-            // Background overlay
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Dialog box
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
             const boxX = 80, boxY = 80, boxWidth = 480, boxHeight = 320;
-            ctx.fillStyle = '#ecf0f1';
-            ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
-            ctx.strokeStyle = '#2c3e50';
-            ctx.lineWidth = 6;
+            ctx.fillStyle = '#ecf0f1'; ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+            ctx.strokeStyle = '#2c3e50'; ctx.lineWidth = 6;
             ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
-
-            // Title
-            ctx.fillStyle = '#2c3e50';
-            ctx.font = '20px "Press Start 2P"';
-            ctx.textAlign = 'center';
-            ctx.fillText(currentChoice.name, canvas.width/2, boxY + 45);
-
-            // Choice buttons
+            ctx.fillStyle = '#2c3e50'; ctx.font = '20px "Press Start 2P"';
+            ctx.textAlign = 'center'; ctx.fillText(currentChoice.name, canvas.width/2, boxY + 45);
             currentChoice.choices.forEach((choice, index) => {
-                const btnY = 160 + index * 90;
-                const btnX = 120;
-                const btnWidth = 400;
-                const btnHeight = 70;
-                
-                ctx.fillStyle = '#3498db';
-                ctx.fillRect(btnX, btnY, btnWidth, btnHeight);
-                ctx.strokeStyle = '#2980b9';
-                ctx.lineWidth = 4;
+                const btnY = 160 + index * 90, btnX = 120, btnWidth = 400, btnHeight = 70;
+                ctx.fillStyle = '#3498db'; ctx.fillRect(btnX, btnY, btnWidth, btnHeight);
+                ctx.strokeStyle = '#2980b9'; ctx.lineWidth = 4;
                 ctx.strokeRect(btnX, btnY, btnWidth, btnHeight);
-                
-                // Choice text
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '12px "Press Start 2P"';
+                ctx.fillStyle = '#ffffff'; ctx.font = '12px "Press Start 2P"';
                 const lines = wrapText(choice.text, 380);
                 lines.forEach((line, lineIndex) => {
                     ctx.fillText(line, btnX + btnWidth/2, btnY + 30 + lineIndex * 20);
@@ -375,166 +261,90 @@
         }
 
         // --- Game Logic & Updates ---
-
-        /**
-         * Updates the character's movement towards a target.
-         */
         function updateMovement() {
             if (!isMoving) return;
-            
-            const speed = 4;
-            const dx = targetX - characterX;
-            const dy = targetY - characterY;
+            const speed = 4, dx = targetX - characterX, dy = targetY - characterY;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            
             if (distance > speed) {
                 characterX += (dx / distance) * speed;
                 characterY += (dy / distance) * speed;
                 walkFrameCounter++;
-                if (walkFrameCounter % 5 === 0) {
-                    walkFrame += 0.5; // Simple frame counter
-                }
+                if (walkFrameCounter % 5 === 0) { walkFrame += 0.5; }
             } else {
-                characterX = targetX;
-                characterY = targetY;
-                isMoving = false;
-                walkFrame = 0;
-                if (pendingObject) {
-                    currentChoice = pendingObject;
-                    pendingObject = null;
-                }
+                characterX = targetX; characterY = targetY;
+                isMoving = false; walkFrame = 0;
+                if (pendingObject) { currentChoice = pendingObject; pendingObject = null; }
             }
         }
 
-        /**
-         * Updates the stats display in the HTML.
-         */
         function updateUI() {
             document.getElementById('money').textContent = money;
             document.getElementById('score').textContent = score;
             document.getElementById('day').textContent = day;
         }
         
-        /**
-         * Displays a message to the player.
-         * @param {string} text - The message to display.
-         * @param {boolean} isGood - Determines the color (good/bad).
-         */
         function showMessage(text, isGood) {
             const messageEl = document.getElementById('message');
             messageEl.textContent = text;
             messageEl.className = isGood ? 'good' : 'bad';
         }
 
-        /**
-         * Wraps text to fit within a max width.
-         * @param {string} text - The text to wrap.
-         * @param {number} maxWidth - The maximum width in pixels.
-         * @returns {string[]} An array of lines.
-         */
         function wrapText(text, maxWidth) {
-            const words = text.split(' ');
-            const lines = [];
-            let currentLine = words[0];
-            
+            const words = text.split(' '), lines = [];
+            let currentLine = words[0] || '';
             for (let i = 1; i < words.length; i++) {
                 const word = words[i];
                 const width = ctx.measureText(currentLine + " " + word).width;
-                if (width < maxWidth) {
-                    currentLine += " " + word;
-                } else {
-                    lines.push(currentLine);
-                    currentLine = word;
-                }
+                if (width < maxWidth) { currentLine += " " + word; } 
+                else { lines.push(currentLine); currentLine = word; }
             }
             lines.push(currentLine);
             return lines;
         }
 
         // --- Event Listeners ---
-
-        canvas.addEventListener('click', (e) => {
+        canvas.addEventListener('click', async (e) => {
             const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const x = (e.clientX - rect.left) * scaleX;
-            const y = (e.clientY - rect.top) * scaleY;
+            const scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX, y = (e.clientY - rect.top) * scaleY;
             
             if (gameState === 'characterSelect') {
                 if (y >= 200 && y <= 400) {
-                    if (x >= 140 && x <= 300) {
-                        selectedCharacter = 'boy';
-                        gameState = 'room';
-                        showMessage('Welcome Alex! Click objects to make decisions.', true);
-                    } else if (x >= 340 && x <= 500) {
-                        selectedCharacter = 'girl';
-                        gameState = 'room';
-                        showMessage('Welcome Maya! Click objects to make decisions.', true);
-                    }
+                    if (x >= 140 && x <= 300) { selectedCharacter = 'boy'; gameState = 'room'; showMessage('Welcome Alex! Click objects to make decisions.', true); } 
+                    else if (x >= 340 && x <= 500) { selectedCharacter = 'girl'; gameState = 'room'; showMessage('Welcome Maya! Click objects to make decisions.', true); }
                 }
             } else if (gameState === 'room' && !currentChoice && !isMoving) {
-                const clickedObject = objects.find(obj => 
-                    x >= obj.x && x <= obj.x + obj.width &&
-                    y >= obj.y && y <= obj.y + obj.height
-                );
+                const clickedObject = objects.find(obj => x >= obj.x && x <= obj.x + obj.width && y >= obj.y && y <= obj.y + obj.height);
                 if (clickedObject) {
                     targetX = clickedObject.x + clickedObject.width / 2 - 30;
                     targetY = clickedObject.y + clickedObject.height;
-                    isMoving = true;
-                    pendingObject = clickedObject;
+                    isMoving = true; pendingObject = clickedObject;
                     showMessage('Walking to ' + clickedObject.name + '...', true);
                 }
             } else if (currentChoice) {
-                currentChoice.choices.forEach((choice, index) => {
-                    const btnY = 160 + index * 90;
-                    const btnX = 120;
-                    const btnWidth = 400;
-                    const btnHeight = 70;
+                for (const [index, choice] of currentChoice.choices.entries()) {
+                    const btnY = 160 + index * 90, btnX = 120, btnWidth = 400, btnHeight = 70;
                     
                     if (x >= btnX && x <= btnX + btnWidth && y >= btnY && y <= btnY + btnHeight) {
-                        money += choice.money;
-                        score += choice.score;
+                        money += choice.money; score += choice.score;
                         showMessage(choice.message, choice.score >= 0);
-                        currentChoice = null;
-                        day++;
-                        updateUI();
-                        
-                        targetX = 280; // Move back to center
-                        targetY = 300;
-                        isMoving = true;
-                        
-                        // Check game over conditions
-                        if (money < 0) {
-                            gameState = 'gameOver';
-                            showMessage('💸 Game Over! You ran out of money. Try again!', false);
-                        } else if (day > 7) {
-                            gameState = 'gameOver';
-                            const rating = score > 80 ? '⭐⭐⭐' : score > 50 ? '⭐⭐' : '⭐';
-                            showMessage(`${rating} You finished with $${money} and ${score} points. Great job!`, true);
-                        }
+                        currentChoice = null; day++; updateUI();
+                        targetX = 280; targetY = 300; isMoving = true;
+                        if (money < 0) { gameState = 'gameOver'; showMessage('💸 Game Over! You ran out of money. Try again!', false); } 
+                        else if (day > 7) { gameState = 'gameOver'; const rating = score > 80 ? '⭐⭐⭐' : score > 50 ? '⭐⭐' : '⭐'; showMessage(`${rating} You finished with $${money} and ${score} points. Great job!`, true); }
+                        break;
                     }
-                });
+                }
             }
         });
         
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && currentChoice) {
-                currentChoice = null;
-            }
-        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && currentChoice) { currentChoice = null; } });
         
         // --- Main Game Loop ---
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            if (gameState === 'characterSelect') {
-                drawCharacterSelect();
-            } else if (gameState === 'room' || gameState === 'gameOver') {
-                updateMovement();
-                drawRoom();
-                drawChoiceDialog();
-            }
-            
+            if (gameState === 'characterSelect') { drawCharacterSelect(); } 
+            else if (gameState === 'room' || gameState === 'gameOver') { updateMovement(); drawRoom(); drawChoiceDialog(); }
             requestAnimationFrame(gameLoop);
         }
         
