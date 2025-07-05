@@ -1046,6 +1046,18 @@ const PartnerActivity = ({ time, isRunning, setIsRunning, setPartnerActivityTime
       <div className="text-center space-y-4">
         <p className="text-xl text-slate-700">Create an AI-powered financial solution for your generation!</p>
         
+        <div className="mt-6 mb-6 bg-white/80 backdrop-blur-lg p-6 rounded-2xl shadow-lg max-w-2xl mx-auto">
+          <h3 className="text-lg font-bold mb-4 text-slate-800">Exercise Introduction</h3>
+          <video 
+            src="AI_Financial_Solutions.mp4"
+            controls
+            className="w-full rounded-lg"
+            preload="metadata"
+          >
+            Your browser does not support the video element.
+          </video>
+        </div>
+        
         <div className="inline-flex items-center justify-center">
           <div className="relative w-48 h-48">
             <svg className="transform -rotate-90 w-48 h-48">
