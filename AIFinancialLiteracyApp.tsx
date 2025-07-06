@@ -112,29 +112,41 @@ const AIFinancialLiteracyApp = () => {
       title: 'How Many Apps Did You Use Yesterday?',
       component: <OpeningPoll responses={pollResponses} setPollResponses={setPollResponses} />
     },
-    // Module 2: AI Economy
+    // Module 2: Data Dignity Calculator
     {
-      id: 'data-dollars',
+      id: 'data-dignity',
       title: "Your Data's Value",
-      component: <DataDollarsModule setUserDataValue={setUserDataValue} userDataValue={userDataValue} />
+      component: <DataDignityModule setUserDataValue={setUserDataValue} userDataValue={userDataValue} />
     },
-    // Module 3: Responsible AI
+    // Module 3: Reality Check & Data-For-Dollars
+    {
+      id: 'reality-check',
+      title: 'The Reality Check',
+      component: <RealityCheckModule />
+    },
+    // Module 4: Responsible AI
     {
       id: 'bias-reality',
       title: 'AI Bias in Financial Services',
       component: <BiasModule />
     },
-    // Module 4: AI Tools Demo
+    // Module 5: AI Tools Demo
     {
       id: 'ai-tools',
       title: 'AI Financial Planning Tools',
       component: <AIToolsDemo selectedPrompt={selectedPrompt} setSelectedPrompt={setSelectedPrompt} aiResponse={aiResponse} setAiResponse={setAiResponse} />
     },
-    // Module 5: Partner Activity
+    // Module 6: Design Ideas
     {
-      id: 'partner-activity',
+      id: 'design-ideas',
       title: 'Design Your AI Financial Solution',
-      component: <PartnerActivity time={partnerActivityTime} isRunning={isTimerRunning} setIsRunning={setIsTimerRunning} setPartnerActivityTime={setPartnerActivityTime} />
+      component: <DesignIdeasModule time={partnerActivityTime} isRunning={isTimerRunning} setIsRunning={setIsTimerRunning} setPartnerActivityTime={setPartnerActivityTime} />
+    },
+    // Module 7: Example Game
+    {
+      id: 'example-game',
+      title: 'Example: Teen Finance Game',
+      component: <ExampleGameModule />
     },
     // Closing
     {
@@ -580,42 +592,14 @@ const OpeningPoll = ({ responses, setPollResponses }) => {
   );
 };
 
-// Data Dollars Module
-const DataDollarsModule = ({ setUserDataValue, userDataValue }) => {
+// Data Dignity Module - First part with video and calculator
+const DataDignityModule = ({ setUserDataValue, userDataValue }) => {
   const [appUsage, setAppUsage] = useState({ facebook: 2, tiktok: 3, instagram: 2, snapchat: 1 });
-  const [flippedPrinciple, setFlippedPrinciple] = useState(null);
   
   useEffect(() => {
     const total = Object.values(appUsage).reduce((sum, hours) => sum + hours, 0);
     setUserDataValue(total * 15); // $15 per hour of usage estimate
   }, [appUsage, setUserDataValue]);
-
-  const dataForDollarsPrinciples = [
-    {
-      icon: <Handshake className="w-10 h-10 mx-auto text-green-500" />,
-      title: "Consent",
-      description: "You have the absolute right to control your data. Nothing is shared without your informed, explicit, and ongoing permission.",
-      details: "This means no hidden clauses or confusing terms. You get to decide exactly what data is used, how it's used, and for how long. It's about putting you in the driver's seat of your digital life."
-    },
-    {
-      icon: <Eye className="w-10 h-10 mx-auto text-blue-500" />,
-      title: "Transparency",
-      description: "No more black boxes. You deserve to see exactly how your data creates value and how that value is shared.",
-      details: "This includes clear reports on which companies are using your data, what they're using it for, and how the compensation you receive is calculated. Full transparency builds trust."
-    },
-    {
-      icon: <Scale className="w-10 h-10 mx-auto text-yellow-500" />,
-      title: "Fairness",
-      description: "The value you create should be recognized and shared equitably. This model ensures the system isn't rigged against you.",
-      details: "Fairness means the economic benefits of AI are distributed broadly, not just concentrated at the top. It ensures that as the digital economy grows, everyone has the opportunity to prosper from it."
-    },
-    {
-      icon: <DollarSign className="w-10 h-10 mx-auto text-red-500" />,
-      title: "Compensation",
-      description: "Your data has real economic value. You should be compensated for it, creating a new potential income stream.",
-      details: "This isn't just about pocket change. As AI becomes more integrated into the economy, compensating users for their data can create a sustainable economic model that bridges the wage gap created by job displacement."
-    }
-  ];
   
   return (
     <div className="space-y-12">
@@ -653,31 +637,92 @@ const DataDollarsModule = ({ setUserDataValue, userDataValue }) => {
         </div>
         
         <div className="space-y-6">
-          <h3 className="text-2xl font-bold text-slate-800">The Reality Check</h3>
-          <div className="space-y-4">
-            <StatCard
-              icon={<Globe className="w-6 h-6" />}
-              title="The Creator Economy"
-              value="$250 Billion Market"
-              description="AI uses your creative data (art, music, videos) to generate new content, fueling a massive market."
-              tooltipText="The creator economy is projected to nearly double to $480 billion by 2027. Generative AI is a key driver, trained on vast datasets of existing content. Source: Goldman Sachs Research."
-            />
-            <StatCard
-              icon={<Target className="w-6 h-6" />}
-              title="TikTok Strategy"
-              value="Teens are 'most susceptible'"
-              description="To engagement algorithms"
-              tooltipText="TikTok's algorithm is famously powerful, creating a personalized 'For You' page that keeps users engaged for long periods. Critics argue this design can be addictive and may expose teens to harmful content. Source: The Wall Street Journal."
-            />
-            <StatCard
-              icon={<Shield className="w-6 h-6" />}
-              title="Your Digital Worth"
-              value="$100-300 annually"
-              description="Per platform you actively use"
-              tooltipText="While your individual data's value varies, data brokers sell aggregated profiles for anywhere from less than a dollar to over $1,000. Your worth increases based on specific, valuable traits. Source: 'The Price of Your Data,' Financial Times."
-            />
+          <h3 className="text-2xl font-bold text-center text-slate-800">See How Your Data Creates Value</h3>
+          <div className="grid gap-6">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
+              <h4 className="text-lg font-bold mb-4 text-slate-700">Understanding Your App Value</h4>
+              <video 
+                src="app_value_videos/app_value_1.mp4"
+                controls
+                className="w-full rounded-lg"
+                preload="metadata"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
+              <h4 className="text-lg font-bold mb-4 text-slate-700">The Data Economy Explained</h4>
+              <video 
+                src="app_value_videos/app_value_2.mp4"
+                controls
+                className="w-full rounded-lg"
+                preload="metadata"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+// Reality Check Module - Second part with stats and Data-For-Dollars framework
+const RealityCheckModule = () => {
+  const [flippedPrinciple, setFlippedPrinciple] = useState(null);
+
+  const dataForDollarsPrinciples = [
+    {
+      icon: <Handshake className="w-10 h-10 mx-auto text-green-500" />,
+      title: "Consent",
+      description: "You have the absolute right to control your data. Nothing is shared without your informed, explicit, and ongoing permission.",
+      details: "This means no hidden clauses or confusing terms. You get to decide exactly what data is used, how it's used, and for how long. It's about putting you in the driver's seat of your digital life."
+    },
+    {
+      icon: <Eye className="w-10 h-10 mx-auto text-blue-500" />,
+      title: "Transparency",
+      description: "No more black boxes. You deserve to see exactly how your data creates value and how that value is shared.",
+      details: "This includes clear reports on which companies are using your data, what they're using it for, and how the compensation you receive is calculated. Full transparency builds trust."
+    },
+    {
+      icon: <Scale className="w-10 h-10 mx-auto text-yellow-500" />,
+      title: "Fairness",
+      description: "The value you create should be recognized and shared equitably. This model ensures the system isn't rigged against you.",
+      details: "Fairness means the economic benefits of AI are distributed broadly, not just concentrated at the top. It ensures that as the digital economy grows, everyone has the opportunity to prosper from it."
+    },
+    {
+      icon: <DollarSign className="w-10 h-10 mx-auto text-red-500" />,
+      title: "Compensation",
+      description: "Your data has real economic value. You should be compensated for it, creating a new potential income stream.",
+      details: "This isn't just about pocket change. As AI becomes more integrated into the economy, compensating users for their data can create a sustainable economic model that bridges the wage gap created by job displacement."
+    }
+  ];
+  
+  return (
+    <div className="space-y-12">
+      <div className="grid md:grid-cols-3 gap-6">
+        <StatCard
+          icon={<Globe className="w-6 h-6" />}
+          title="The Creator Economy"
+          value="$250 Billion Market"
+          description="AI uses your creative data (art, music, videos) to generate new content, fueling a massive market."
+          tooltipText="The creator economy is projected to nearly double to $480 billion by 2027. Generative AI is a key driver, trained on vast datasets of existing content. Source: Goldman Sachs Research."
+        />
+        <StatCard
+          icon={<Target className="w-6 h-6" />}
+          title="TikTok Strategy"
+          value="Teens are 'most susceptible'"
+          description="To engagement algorithms"
+          tooltipText="TikTok's algorithm is famously powerful, creating a personalized 'For You' page that keeps users engaged for long periods. Critics argue this design can be addictive and may expose teens to harmful content. Source: The Wall Street Journal."
+        />
+        <StatCard
+          icon={<Shield className="w-6 h-6" />}
+          title="Your Digital Worth"
+          value="$100-300 annually"
+          description="Per platform you actively use"
+          tooltipText="While your individual data's value varies, data brokers sell aggregated profiles for anywhere from less than a dollar to over $1,000. Your worth increases based on specific, valuable traits. Source: 'The Price of Your Data,' Financial Times."
+        />
       </div>
 
       <div className="bg-white p-6 rounded-2xl max-w-5xl mx-auto border border-slate-200 shadow-lg">
@@ -703,34 +748,6 @@ const DataDollarsModule = ({ setUserDataValue, userDataValue }) => {
       </div>
        <div className="text-center mt-12">
          <Quote text="You are the new asset class. Your data is your property." author="John Hope Bryant" />
-      </div>
-
-      <div className="mt-12 space-y-6">
-        <h3 className="text-2xl font-bold text-center text-slate-800">See How Your Data Creates Value</h3>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
-            <h4 className="text-lg font-bold mb-4 text-slate-700">Understanding Your App Value</h4>
-            <video 
-              src="app_value_videos/app_value_1.mp4"
-              controls
-              className="w-full rounded-lg"
-              preload="metadata"
-            >
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
-            <h4 className="text-lg font-bold mb-4 text-slate-700">The Data Economy Explained</h4>
-            <video 
-              src="app_value_videos/app_value_2.mp4"
-              controls
-              className="w-full rounded-lg"
-              preload="metadata"
-            >
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -951,8 +968,8 @@ const AIToolsDemo = ({ selectedPrompt, setSelectedPrompt, aiResponse, setAiRespo
   );
 };
 
-// Partner Activity
-const PartnerActivity = ({ time, isRunning, setIsRunning, setPartnerActivityTime }) => {
+// Design Ideas Module - First part with video, timer, and ideas
+const DesignIdeasModule = ({ time, isRunning, setIsRunning, setPartnerActivityTime }) => {
   const [inputMinutes, setInputMinutes] = useState(time / 60);
 
   const handleTimeChange = (e) => {
@@ -1098,6 +1115,91 @@ const PartnerActivity = ({ time, isRunning, setIsRunning, setPartnerActivityTime
   );
 };
 
+// Example Game Module - Second part showcasing the game
+const ExampleGameModule = () => {
+  return (
+    <div className="space-y-8">
+      <div className="text-center space-y-4">
+        <p className="text-xl text-slate-700">Here's an example of what students can create - a Teen Finance Game!</p>
+        <div className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-full border border-slate-200 shadow-sm">
+          <Gamepad2 className="w-5 h-5 text-blue-500" />
+          <span className="text-lg text-slate-700">Interactive learning made fun</span>
+        </div>
+      </div>
+      
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
+        <h3 className="text-xl font-bold mb-4 text-slate-900">Teen Finance Game - Interactive Demo</h3>
+        <div className="aspect-video bg-slate-100 rounded-lg overflow-hidden">
+          <iframe
+            src="teen-finance-game.html"
+            className="w-full h-full border-0"
+            title="Teen Finance Game"
+            allowFullScreen
+          >
+            Your browser does not support iframes.
+          </iframe>
+        </div>
+      </div>
+      
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
+          <h4 className="text-lg font-bold mb-4 text-slate-700 flex items-center gap-2">
+            <Brain className="w-5 h-5 text-blue-500" />
+            AI Features Used
+          </h4>
+          <ul className="space-y-2 text-slate-600">
+            <li className="flex items-start gap-2">
+              <span className="text-blue-500 mt-1">•</span>
+              <span>Dynamic scenario generation</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-500 mt-1">•</span>
+              <span>Personalized financial advice</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-500 mt-1">•</span>
+              <span>Real-time budget optimization</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-blue-500 mt-1">•</span>
+              <span>Adaptive learning pathways</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
+          <h4 className="text-lg font-bold mb-4 text-slate-700 flex items-center gap-2">
+            <Shield className="w-5 h-5 text-green-500" />
+            Data Dignity Features
+          </h4>
+          <ul className="space-y-2 text-slate-600">
+            <li className="flex items-start gap-2">
+              <span className="text-green-500 mt-1">•</span>
+              <span>Transparent data usage policy</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-green-500 mt-1">•</span>
+              <span>User consent for all data collection</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-green-500 mt-1">•</span>
+              <span>Option to monetize gaming data</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-green-500 mt-1">•</span>
+              <span>Privacy-first design approach</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div className="text-center mt-12">
+        <Quote text="Innovation distinguishes between a leader and a follower." author="Steve Jobs" />
+      </div>
+    </div>
+  );
+};
+
 // Closing Module
 const ClosingModule = ({ pledgeData, setPledgeData, finalWords, setFinalWords }) => {
   const [newWord, setNewWord] = useState('');
@@ -1165,38 +1267,6 @@ const ClosingModule = ({ pledgeData, setPledgeData, finalWords, setFinalWords })
         )}
       </div>
       
-      <div className="mt-12 space-y-6">
-        <h3 className="text-2xl font-bold text-center text-slate-800">Financial Dignity Declaration</h3>
-        <p className="text-center text-slate-600">Add your word to our collective vision</p>
-        
-        <div className="flex gap-2 max-w-md mx-auto">
-          <input
-            type="text"
-            value={newWord}
-            onChange={(e) => setNewWord(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddWord()}
-            className="flex-1 px-4 py-2 bg-slate-100 border border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none"
-            placeholder="Your word for financial dignity..."
-          />
-          <button
-            onClick={handleAddWord}
-            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:opacity-90 transition-all font-semibold"
-          >
-            <Send className="w-5 h-5" />
-          </button>
-        </div>
-        
-        <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
-          {[...sampleWords, ...finalWords].map((word, index) => (
-            <span
-              key={index}
-              className="px-4 py-2 bg-white rounded-full border border-slate-200 shadow-sm text-slate-700"
-            >
-              {word}
-            </span>
-          ))}
-        </div>
-      </div>
       
       <div className="mt-12 text-center space-y-4">
         <div className="bg-white p-6 rounded-2xl max-w-3xl mx-auto border border-slate-200 shadow-lg">
